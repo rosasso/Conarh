@@ -1,0 +1,45 @@
+APP KAVUKA — "APARÊNCIA ENGANA" (CONARH)
+=========================================
+Quiz interativo de background check + captação de leads, 100% offline.
+Feito para rodar em tablets (Android e macOS), salvando os leads LOCALMENTE.
+
+ARQUIVO
+-------
+index.html  → o app inteiro em um único arquivo (imagens embutidas, ~8,5 MB).
+              Não precisa de internet nem de servidor. É só abrir no navegador.
+
+COMO USAR NO TABLET
+-------------------
+1. Copie o arquivo "index.html" para o tablet (cabo, e-mail, pen drive, Drive etc.).
+2. Abra com o navegador (Chrome no Android / Safari no macOS/iPad).
+   Dica: use "Adicionar à tela de início" para virar um atalho de tela cheia.
+3. Ao tocar em COMEÇAR o app entra em tela cheia automaticamente (kiosk).
+4. Deixe o visitante jogar: escolhe a vaga → escolhe o candidato →
+   vê os alertas → RESPONDA → preenche o cadastro → tela de "Obrigado".
+5. Sem toque por 2 minutos, o app volta sozinho para a tela inicial.
+
+OS LEADS
+--------
+- Cada cadastro é salvo no próprio aparelho (armazenamento local do navegador).
+- Guardamos também a VAGA e o CANDIDATO que a pessoa escolheu (dado de qualificação).
+
+PARA VER / EXPORTAR OS LEADS (organizador)
+------------------------------------------
+- Toque na engrenagem discreta no canto SUPERIOR DIREITO.
+- Digite o PIN: 5288
+- Lá você pode:
+    • Ver a lista de leads
+    • BAIXAR CSV  → abre direto no Excel (acentos ok, separador ";")
+    • COMPARTILHAR → manda o arquivo por WhatsApp, e-mail etc. (Android)
+    • APAGAR todos os leads (pede confirmação — baixe o CSV antes!)
+
+IMPORTANTE
+----------
+- Os leads ficam SÓ naquele tablet/navegador. Se usar 2 tablets, exporte de cada um.
+- Exporte o CSV ao fim de cada dia por segurança.
+- Não limpe os dados de navegação do navegador (isso apaga os leads).
+
+TROCAR O PIN
+------------
+Abra o index.html num editor de texto e procure por:  const ADMIN_PIN = "5288";
+Troque 5288 pelo PIN que quiser e salve.
