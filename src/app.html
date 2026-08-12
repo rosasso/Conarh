@@ -343,18 +343,18 @@ form{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px;margin-top:30px;
     <h1 class="form-h">Ganhe uma chance na <span class="y">Máquina da Capivara</span></h1>
     <p class="form-sub">Para participar, é só responder:</p>
     <form id="leadForm" novalidate autocomplete="on">
-      <div class="field wide"><label>Nome <span class="req">*</span></label><input name="nome" type="text" autocomplete="name" placeholder="Seu nome"></div>
-      <div class="field wide"><label>E-mail <span class="req">*</span></label><input name="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
+      <div class="field wide"><label>Nome</label><input name="nome" type="text" autocomplete="name" placeholder="Seu nome"></div>
+      <div class="field wide"><label>E-mail</label><input name="email" type="text" inputmode="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
       <div class="field"><label>Cargo</label><input name="cargo" type="text" autocomplete="organization-title" placeholder="Ex.: Gerente de RH"></div>
-      <div class="field"><label>Telefone <span class="req">*</span></label><input name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></div>
-      <div class="field wide"><label>Empresa <span class="req">*</span></label><input name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa"></div>
+      <div class="field"><label>Telefone</label><input name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></div>
+      <div class="field wide"><label>Empresa</label><input name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa"></div>
       <div class="field"><label>Quantidade de funcionários</label><select name="funcionarios">
         <option value="">Selecione…</option><option>Até 50</option><option>51 a 100</option><option>101 a 200</option><option>201 a 500</option><option>Acima de 500</option></select></div>
       <div class="field"><label>Ação</label><select name="acao">
         <option value="">Selecione…</option><option>Agendar Reunião</option><option>Envio de Apresentação</option><option>Nenhuma ação</option></select></div>
       <label class="consent"><input type="checkbox" name="consent"><span>Autorizo o contato da Kavuka&nbsp;by&nbsp;Guép e o tratamento dos meus dados conforme a LGPD.</span></label>
       <div class="err" id="formErr"></div>
-      <div class="form-send"><button class="btn" type="submit">ENVIAR E GIRAR
+      <div class="form-send"><button class="btn" type="submit">ENVIAR
         <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="3"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
     </form>
   </section>
@@ -364,7 +364,7 @@ form{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px;margin-top:30px;
     <img class="logo" src="{{LOGO}}" alt="Kavuka">
     <svg class="thk-check" viewBox="0 0 96 96"><circle cx="48" cy="48" r="44" fill="none" stroke="#FDC500" stroke-width="5"/><path d="M30 49l12 12 24-26" fill="none" stroke="#FDC500" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <h1 class="thk-h">Obrigado<span id="thkName"></span>!</h1>
-    <p class="thk-p">Seu cadastro foi salvo.<br><b>Mostre esta tela no estande</b> para girar a Máquina da Capivara.</p>
+    <p class="thk-p">Seu cadastro foi salvo.<br><b>Mostre esta tela no estande</b> para puxar sua capivara.</p>
     <div class="cta-center" style="margin-top:44px;position:relative;z-index:2">
       <button class="btn ghost" onclick="resetToStart()">NOVO PARTICIPANTE</button></div>
     <img class="claw" src="{{CLAW}}" alt="Máquina da Capivara">
@@ -496,16 +496,11 @@ function selectCand(c){
 document.getElementById('leadForm').addEventListener('submit',function(e){
   e.preventDefault();
   const f=e.target; const err=document.getElementById('formErr');
-  f.querySelectorAll('.field').forEach(x=>x.classList.remove('bad'));
   const get=n=>f.elements[n].value.trim();
-  const need=['nome','email','telefone','empresa'];
-  let bad=false;
-  need.forEach(n=>{ if(!get(n)){ f.elements[n].closest('.field').classList.add('bad'); bad=true; }});
   const email=get('email');
-  if(email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ f.elements['email'].closest('.field').classList.add('bad'); bad=true; }
-  const telDigits=get('telefone').replace(/\D/g,'');
-  if(get('telefone') && telDigits.length<10){ f.elements['telefone'].closest('.field').classList.add('bad'); bad=true; }
-  if(bad){ err.textContent='Confira os campos destacados.'; return; }
+  // SEM validação de formato de propósito: o app roda no estande e nada aqui
+  // pode travar o visitante. O único bloqueio é o aceite da LGPD, que é
+  // exigência legal para poder entrar em contato depois.
   if(!f.elements['consent'].checked){ err.textContent='É preciso aceitar o uso dos dados (LGPD).'; return; }
   err.textContent='';
   const lead={
