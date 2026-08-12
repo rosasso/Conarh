@@ -7,15 +7,30 @@ O layout segue o mesmo padrão visual da apresentação em PowerPoint
 ("APP CONARH.pptx", que está nesta pasta como referência).
 
 
-ONDE O APP ESTÁ NO AR
----------------------
-    https://rosasso.github.io/Conarh/
+COMO O APP CHEGA NO TABLET
+--------------------------
+O repositório é PRIVADO, e GitHub Pages em repositório privado exige conta
+paga. Ou seja: NO MOMENTO NÃO EXISTE LINK NO AR.
 
-CUIDADO com o "C" MAIÚSCULO. O GitHub Pages diferencia maiúscula de minúscula:
-"rosasso.github.io/conarh" dá 404.
+O app que está no tablet foi instalado enquanto o repositório esteve público
+e roda 100% offline — não depende de link nenhum para funcionar no estande.
 
-Publica sozinho: todo push na branch main republica o site em 1 ou 2 minutos.
-Ou seja, o ciclo é:  mexe em src/  →  python3 build.py  →  git push
+PARA PUBLICAR UMA VERSÃO NOVA (ou instalar em outro tablet):
+
+  1. Deixe o repositório público:
+        gh repo edit rosasso/Conarh --visibility public --accept-visibility-change-consequences
+  2. Espere 1 ou 2 minutos e abra no tablet:
+        https://rosasso.github.io/Conarh/
+     CUIDADO com o "C" MAIÚSCULO — "/conarh" minúsculo dá 404.
+     Abra, FECHE e ABRA DE NOVO (ver o porquê logo abaixo).
+  3. Feche de novo:
+        gh repo edit rosasso/Conarh --visibility private --accept-visibility-change-consequences
+
+Alternativa sem link: o index.html é um arquivo único e autossuficiente.
+Dá para mandar por Drive, e-mail ou cabo e abrir direto no navegador — só
+não instala como app nem atualiza sozinho.
+
+O ciclo de edição é sempre:  mexe em src/  →  python3 build.py  →  git push
 
 Se o site parar de atualizar do nada, confira se o arquivo ".nojekyll" ainda
 está na raiz. Sem ele o Pages processa tudo com Jekyll, que tenta interpretar
