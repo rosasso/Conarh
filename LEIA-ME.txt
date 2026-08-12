@@ -36,18 +36,19 @@ Se o site parar de atualizar do nada, confira se o arquivo ".nojekyll" ainda
 está na raiz. Sem ele o Pages processa tudo com Jekyll, que tenta interpretar
 os marcadores {{LOGO}} do src/app.html como código dele e o build QUEBRA.
 
-O repositório é público, mas o app tem "noindex" e um robots.txt bloqueando
-buscadores — são rostos realistas com fichas criminais fictícias, serve pro
-estande e não para aparecer no Google. Não remova isso.
+O app tem "noindex" e um robots.txt bloqueando buscadores — são rostos
+realistas com fichas criminais fictícias, serve pro estande e não para
+aparecer no Google. NÃO REMOVA, é o que protege a gente nas vezes em que o
+repositório precisa ficar público.
 
-O "APP CONARH.pptx" e o "plano-midia-conarh.html" ficam SÓ no Mac (estão no
-.gitignore): é material comercial interno e o repositório é aberto.
+Pelo mesmo motivo, o "APP CONARH.pptx" e o "plano-midia-conarh.html" ficam SÓ
+no Mac (estão no .gitignore): é material comercial interno.
 
 
 COMO USAR NO TABLET
 -------------------
-1. Abra o link acima no tablet (Chrome no Android / Safari no iPad) — ou copie
-   o arquivo "index.html" pra ele por cabo, e-mail, pen drive, Drive etc.
+1. Já está instalado no tablet. Se precisar instalar de novo, siga os passos
+   de "COMO O APP CHEGA NO TABLET" lá em cima.
    Dica: use "Adicionar à tela de início" para virar um atalho de tela cheia.
 2. Ao publicar uma versão nova, abra o link, FECHE E ABRA DE NOVO. O service
    worker novo se instala em segundo plano e só entra em ação no acesso
