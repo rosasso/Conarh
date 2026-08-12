@@ -1,0 +1,242 @@
+[
+  {
+    "id": "baba",
+    "title": "BABÁ",
+    "icon": "img/icon-baba.png",
+    "cands": [
+      {
+        "k": "A",
+        "name": "CARLA",
+        "desc": "8 anos cuidando de crianças",
+        "img": "img/baba-a.png",
+        "flags": [
+          "Art. 129 — Lesão Corporal",
+          "Art. 171 — Estelionato",
+          "Art. 28 — Porte de drogas"
+        ]
+      },
+      {
+        "k": "B",
+        "name": "FERNANDA",
+        "desc": "Excelente comunicação",
+        "img": "img/baba-b.png",
+        "flags": [
+          "Art. 121 — Homicídio Qualificado",
+          "Art. 180 — Receptação"
+        ]
+      },
+      {
+        "k": "C",
+        "name": "JULIANA",
+        "desc": "Curso de primeiros socorros",
+        "img": "img/baba-c.png",
+        "flags": [
+          "Art. 147 — Ameaça",
+          "03 Processos Trabalhistas",
+          "Art. 32 — Maus-Tratos a Animais"
+        ]
+      },
+      {
+        "k": "D",
+        "name": "PATRÍCIA",
+        "desc": "Ótimas referências familiares",
+        "img": "img/baba-d.png",
+        "flags": [
+          "Art. 129 — Lesão Corporal",
+          "Art. 136 — Maus-Tratos a Crianças"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "financeiro",
+    "title": "ANALISTA FINANCEIRO",
+    "icon": "img/icon-financeiro.png",
+    "cands": [
+      {
+        "k": "A",
+        "name": "CARLA",
+        "desc": "Contadora em banco",
+        "img": "img/financeiro-a.png",
+        "flags": [
+          "Art. 171 — Estelionato",
+          "Art. 21 — Atribuir-se falsamente identidade para realizar operação financeira"
+        ]
+      },
+      {
+        "k": "B",
+        "name": "JOÃO",
+        "desc": "10 anos de experiência",
+        "img": "img/financeiro-b.png",
+        "flags": [
+          "Art. 213 — Estupro",
+          "Art. 1º — Lavagem de Dinheiro",
+          "05 Processos Trabalhistas"
+        ]
+      },
+      {
+        "k": "C",
+        "name": "PEDRO",
+        "desc": "MBA e boas referências",
+        "img": "img/financeiro-c.png",
+        "flags": [
+          "Art. 121-A — Feminicídio",
+          "Art. 33 — Narcotráfico"
+        ]
+      },
+      {
+        "k": "D",
+        "name": "MÁRCIO",
+        "desc": "Indicação do CEO",
+        "img": "img/financeiro-d.png",
+        "flags": [
+          "Art. 168 — Apropriação Indébita",
+          "Pena Privativa de Liberdade"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "professor",
+    "title": "PROFESSOR(A)",
+    "icon": "img/icon-professor.png",
+    "cands": [
+      {
+        "k": "A",
+        "name": "CARLOS",
+        "desc": "10 anos em sala de aula",
+        "img": "img/professor-a.png",
+        "flags": [
+          "Art. 121 — Homicídio Qualificado",
+          "Art. 213 — Estupro"
+        ]
+      },
+      {
+        "k": "B",
+        "name": "RENATA",
+        "desc": "Pós-graduação em educação",
+        "img": "img/professor-b.png",
+        "flags": [
+          "Art. 129 — Lesão Corporal",
+          "Art. 171 — Estelionato",
+          "Art. 33 — Narcotráfico"
+        ]
+      },
+      {
+        "k": "C",
+        "name": "LUCIANA",
+        "desc": "Indicação da coordenação",
+        "img": "img/professor-c.png",
+        "flags": [
+          "Art. 129 — Lesão Corporal",
+          "Art. 136 — Maus-Tratos a Crianças"
+        ]
+      },
+      {
+        "k": "D",
+        "name": "MARCOS",
+        "desc": "Muito carismático com alunos",
+        "img": "img/professor-d.png",
+        "flags": [
+          "Art. 42 — Perturbação do Sossego",
+          "Art. 217 — Estupro de Vulnerável"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gerente",
+    "title": "GERENTE",
+    "icon": "img/icon-gerente.png",
+    "cands": [
+      {
+        "k": "A",
+        "name": "ROGÉRIO",
+        "desc": "15 anos de experiência",
+        "img": "img/gerente-a.png",
+        "flags": [
+          "Art. 121 — Homicídio Qualificado",
+          "Art. 213 — Estupro"
+        ]
+      },
+      {
+        "k": "B",
+        "name": "DIEGO",
+        "desc": "Direção defensiva avançada",
+        "img": "img/gerente-b.png",
+        "flags": [
+          "Art. 171 — Estelionato",
+          "Art. 21 — Atribuir-se falsamente identidade para realizar operação financeira"
+        ]
+      },
+      {
+        "k": "C",
+        "name": "MARCELO",
+        "desc": "Excelente apresentação",
+        "img": "img/gerente-c.png",
+        "flags": [
+          "Art. 168 — Apropriação Indébita",
+          "Art. 147 — Ameaça"
+        ]
+      },
+      {
+        "k": "D",
+        "name": "MARCOS",
+        "desc": "Indicação de diretoria",
+        "img": "img/gerente-d.png",
+        "flags": [
+          "Art. 171 — Estelionato",
+          "Art. 28 — Porte de drogas",
+          "Art. 288 — Formação de Quadrilha"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "recepcionista",
+    "title": "RECEPCIONISTA",
+    "icon": "img/icon-recepcionista.png",
+    "cands": [
+      {
+        "k": "A",
+        "name": "CAMILA",
+        "desc": "Excelente atendimento",
+        "img": "img/recepcionista-a.png",
+        "flags": [
+          "Art. 147 — Ameaça",
+          "05 Processos Trabalhistas"
+        ]
+      },
+      {
+        "k": "B",
+        "name": "GABRIELA",
+        "desc": "Inglês fluente",
+        "img": "img/recepcionista-b.png",
+        "flags": [
+          "Art. 168 — Apropriação Indébita",
+          "05 Processos Trabalhistas"
+        ]
+      },
+      {
+        "k": "C",
+        "name": "FELIPE",
+        "desc": "Experiência corporativa",
+        "img": "img/recepcionista-c.png",
+        "flags": [
+          "Art. 216-A — Assédio Sexual",
+          "Art. 186 — Assédio Moral"
+        ]
+      },
+      {
+        "k": "D",
+        "name": "AMANDA",
+        "desc": "Indicação da gerência",
+        "img": "img/recepcionista-d.png",
+        "flags": [
+          "Art. 140 — Injúria Racial",
+          "Art. 28 — Porte de drogas"
+        ]
+      }
+    ]
+  }
+]

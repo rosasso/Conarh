@@ -1,22 +1,22 @@
 APP KAVUKA — "APARÊNCIA ENGANA" (CONARH)
 =========================================
 Quiz interativo de background check + captação de leads, 100% offline.
-Feito para rodar em tablets (Android e macOS), salvando os leads LOCALMENTE.
+Feito para rodar em tablet, salvando os leads LOCALMENTE no aparelho.
 
-ARQUIVO
--------
-index.html  → o app inteiro em um único arquivo (imagens embutidas, ~8,5 MB).
-              Não precisa de internet nem de servidor. É só abrir no navegador.
+O layout segue o mesmo padrão visual da apresentação em PowerPoint
+("APP CONARH.pptx", que está nesta pasta como referência).
+
 
 COMO USAR NO TABLET
 -------------------
 1. Copie o arquivo "index.html" para o tablet (cabo, e-mail, pen drive, Drive etc.).
-2. Abra com o navegador (Chrome no Android / Safari no macOS/iPad).
+2. Abra com o navegador (Chrome no Android / Safari no iPad).
    Dica: use "Adicionar à tela de início" para virar um atalho de tela cheia.
-3. Ao tocar em COMEÇAR o app entra em tela cheia automaticamente (kiosk).
+3. Ao tocar em PESQUISAR o app entra em tela cheia automaticamente (kiosk).
 4. Deixe o visitante jogar: escolhe a vaga → escolhe o candidato →
    vê os alertas → RESPONDA → preenche o cadastro → tela de "Obrigado".
 5. Sem toque por 2 minutos, o app volta sozinho para a tela inicial.
+
 
 OS LEADS
 --------
@@ -39,7 +39,64 @@ IMPORTANTE
 - Exporte o CSV ao fim de cada dia por segurança.
 - Não limpe os dados de navegação do navegador (isso apaga os leads).
 
+
+==========================================================================
+COMO EDITAR O APP
+==========================================================================
+
+O "index.html" é o app pronto, com as imagens embutidas (7 MB). NÃO edite ele
+direto — ele é GERADO. Quem manda é a pasta "src":
+
+  src/app.html    → o layout, as cores, os textos fixos e o código
+  src/jobs.json   → as vagas, os candidatos e os alertas de cada um
+  src/img/        → todas as imagens (logo, capivara, máquina, candidatos, ícones)
+
+Depois de mexer em qualquer coisa dentro de "src", rode no Mac:
+
+    cd /Users/sasso/opensquad/apps/conarh
+    python3 build.py
+
+Isso regera o "index.html" e já atualiza a versão do cache (senão o tablet
+continuaria mostrando a versão antiga).
+
+Para conferir rápido no navegador do Mac, sem gerar o arquivo de 7 MB:
+
+    python3 build.py --dev
+    open -a Safari src/dev.html
+
+
+TAMANHO DA TELA
+---------------
+O app é desenhado num "palco" fixo de 1242 x 2000 px — a mesma proporção dos
+slides do PowerPoint — e depois é reduzido/ampliado por inteiro para caber na
+tela do aparelho. Por isso ele preenche o tablet do mesmo jeito que o pptx.
+
+Consequência prática: ao editar posições e tamanhos em "src/app.html", pense
+sempre em cima desses 1242 x 2000. Um botão de 52px ali vai aparecer maior ou
+menor conforme a tela, mas a proporção entre os elementos nunca muda.
+
+
+TROCAR UMA FOTO DE CANDIDATO
+----------------------------
+Substitua o arquivo em src/img/ mantendo o nome (ex.: baba-a.png) e rode o
+build. A proporção original é 360 x 410 px.
+
+
+OS ÍCONES DAS VAGAS
+-------------------
+São os arquivos src/img/icon-<vaga>.png (icon-baba.png, icon-financeiro.png,
+icon-professor.png, icon-gerente.png, icon-recepcionista.png).
+
+Quatro deles foram tirados do próprio "APP CONARH.pptx", então são exatamente
+os mesmos da apresentação. O de GERENTE não existia no pptx (lá as vagas eram
+porteiro e motorista), então foi desenhado no mesmo traço.
+
+Para trocar: coloque um PNG de 512 x 512 com fundo TRANSPARENTE, traço amarelo
+(#FDC500), e rode o build. Qual arquivo cada vaga usa está no src/jobs.json,
+no campo "icon".
+
+
 TROCAR O PIN
 ------------
-Abra o index.html num editor de texto e procure por:  const ADMIN_PIN = "5288";
-Troque 5288 pelo PIN que quiser e salve.
+Abra src/app.html e procure por:  const ADMIN_PIN = "5288";
+Troque 5288 pelo PIN que quiser, salve e rode o build.

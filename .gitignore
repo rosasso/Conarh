@@ -1,2 +1,8 @@
 .DS_Store
 *.log
+src/dev.html
+src/_prev-*.html
+
+# material interno — fica só no Mac, não vai pro repositório público
+APP CONARH.pptx
+plano-midia-conarh.html

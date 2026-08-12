@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta name="theme-color" content="#00112d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kavuka CONARH">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Kavuka · Aparência Engana</title>
+<style>
+/* ==========================================================================
+   KAVUKA CONARH — "Aparência Engana"
+   Layout em CANVAS FIXO de 1242 x 2000 px (mesma proporção da apresentação
+   em PowerPoint). Tudo aqui dentro é medido nesses pixels; o app inteiro é
+   escalado por transform:scale() para preencher a tela do tablet.
+   Para editar posições/tamanhos, pense sempre no canvas de 1242x2000.
+   ========================================================================== */
+:root{
+  --navy:#00112d; --navy2:#0a2150; --navy-card:#0c1c3d;
+  --yellow:#FDC500; --yellow-d:#f0b400;
+  --white:#ffffff; --ink:#12213f; --mut:#9fb0d0; --line:rgba(255,255,255,.16);
+  --red:#c62828;
+  --font:Arial,'Helvetica Neue',Helvetica,Roboto,'Segoe UI',system-ui,sans-serif;
+  --k:1;               /* fator de escala — calculado no JS */
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden}
+body{
+  font-family:var(--font); color:var(--white); background:var(--navy);
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+}
+
+/* ---- palco escalável ---------------------------------------------------- */
+#viewport{position:fixed;inset:0;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 42%, #0b2454 0%, #061838 46%, #01122e 76%, #000c20 100%)}
+#stage{position:absolute;left:50%;top:50%;width:1242px;height:2000px;
+  transform:translate(-50%,-50%) scale(var(--k));transform-origin:center center;
+  background:radial-gradient(120% 80% at 50% 42%, #0b2454 0%, #061838 46%, #01122e 76%, #000c20 100%);
+  overflow:hidden}
+
+/* ---- enfeites de fundo (pontinhos + selo de check) ---------------------- */
+.deco{position:absolute;pointer-events:none;z-index:0}
+.dots{width:210px;height:290px;opacity:.85;
+  background-image:radial-gradient(rgba(255,255,255,.16) 3.4px, transparent 3.6px);
+  background-size:38px 38px}
+.dots.tl{left:22px;top:26px}
+.dots.br{right:22px;bottom:26px;width:190px;height:230px}
+.seal{right:-40px;top:820px;width:520px;height:520px;opacity:.42}
+
+/* ---- telas -------------------------------------------------------------- */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;
+  padding:34px 62px 56px;z-index:1}
+.screen.active{display:flex;animation:fade .32s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.spacer{flex:1}
+
+.logo{display:block;width:392px;margin:0 auto}
+
+/* ---- mascote (uma só imagem, tamanho por tela) -------------------------- */
+.mascot{position:absolute;bottom:0;z-index:3;pointer-events:none;display:none;
+  filter:drop-shadow(0 10px 30px rgba(0,0,0,.5))}
+.mascot.m-start {display:block;left:-6px;  width:520px}
+.mascot.m-cands {display:block;left:-10px; width:228px}
+.mascot.m-reveal{display:block;left:-14px; width:378px}
+
+/* ---- botões ------------------------------------------------------------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:20px;
+  background:var(--yellow);color:var(--ink);font-weight:900;font-family:var(--font);
+  border:0;border-radius:34px;padding:30px 52px;font-size:52px;letter-spacing:.5px;
+  cursor:pointer;box-shadow:0 14px 34px rgba(253,197,0,.24);transition:transform .08s ease}
+.btn:active{transform:scale(.97)}
+.btn .arw{width:52px;height:52px;flex:none}
+.btn.ghost{background:transparent;color:#cfe0ff;box-shadow:none;
+  border:3px solid var(--line);font-size:38px;padding:22px 44px}
+.cta-right{position:absolute;right:62px;bottom:56px;z-index:4}
+.cta-center{display:flex;justify-content:center}
+
+/* ---- casinha / engrenagem ---------------------------------------------- */
+.home{position:absolute;right:52px;bottom:34px;width:92px;height:92px;border:0;
+  background:transparent;cursor:pointer;z-index:5;padding:0;display:none}
+.home svg{width:100%;height:100%}
+.gear{position:fixed;top:12px;right:12px;width:44px;height:44px;border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.07);border-radius:50%;opacity:.7;cursor:pointer;z-index:30;padding:10px}
+.gear:active{opacity:1}
+.gear svg{width:100%;height:100%}
+
+/* ==========================================================================
+   TELA 1 — ABERTURA
+   ========================================================================== */
+#s-start .title{font-weight:900;font-size:150px;line-height:.94;letter-spacing:-3px;
+  text-align:center;margin:44px 0 0}
+#s-start .title .b{color:#f2efe9}
+#s-start .title .y{color:var(--yellow)}
+.mag-rule{display:flex;align-items:center;gap:26px;justify-content:center;margin:22px 0 30px}
+.mag-rule .ln{height:5px;width:172px;background:var(--yellow)}
+.mag-rule svg{width:66px;height:66px;flex:none}
+.sub{text-align:center;font-size:50px;font-weight:700;line-height:1.28;margin:0}
+.sub .y{color:var(--yellow)}
+.feats{position:absolute;right:34px;bottom:250px;width:600px;z-index:2;
+  display:flex;flex-direction:column;gap:56px;align-items:center}
+.feat{display:flex;flex-direction:column;align-items:center;gap:16px;
+  font-size:44px;font-weight:700;text-align:center;line-height:1.1}
+.feat svg{width:96px;height:96px;flex:none}
+
+/* ==========================================================================
+   TELA 2 — ESCOLHA A VAGA
+   ========================================================================== */
+.h-screen{font-weight:900;font-size:118px;line-height:1;letter-spacing:-2px;
+  text-align:center;margin:44px 0 0}
+.h-screen .y{color:var(--yellow)}
+.jobgrid{display:grid;grid-template-columns:1fr 1fr;gap:86px 62px;
+  width:1010px;margin:0 auto;align-content:center}
+.job{display:flex;flex-direction:column;align-items:center;gap:26px;
+  background:transparent;border:0;cursor:pointer;padding:0;font-family:var(--font)}
+.job.solo{grid-column:1 / -1;width:474px;justify-self:center}
+.job .ic{height:230px;display:flex;align-items:center;justify-content:center}
+.job .ic img{max-width:230px;max-height:230px;display:block}
+.job .lbl{background:var(--yellow);color:var(--ink);font-weight:900;font-size:48px;
+  border-radius:30px;padding:30px 10px;width:100%;text-align:center;line-height:1.05;
+  box-shadow:0 10px 26px rgba(253,197,0,.20);transition:transform .08s ease}
+.job:active .lbl{transform:scale(.97)}
+
+/* ==========================================================================
+   TELA 3 — CANDIDATOS
+   ========================================================================== */
+.kicker{display:flex;align-items:center;gap:22px;justify-content:center;color:var(--yellow);
+  font-weight:900;font-size:40px;letter-spacing:2px;margin-top:26px}
+.kicker .ln{height:5px;flex:1;max-width:210px;background:var(--yellow)}
+.jobname{text-align:center;font-weight:900;font-size:88px;color:#dde5f5;
+  line-height:1.05;margin:14px 0 0}
+.ask{text-align:center;font-size:48px;font-weight:500;margin:14px 0 0;color:#eaf0ff}
+.ask .y{color:var(--yellow);font-weight:800}
+.candgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:1000px;margin:34px auto 0}
+.cand{border:0;background:transparent;padding:0;cursor:pointer;transition:transform .08s ease}
+.cand img{width:100%;display:block;border-radius:22px}
+.cand:active{transform:scale(.97)}
+.remind{display:flex;gap:26px;align-items:flex-start;border:3px solid #2a63b0;border-radius:26px;
+  padding:26px 32px;margin:auto 0 124px 290px;background:rgba(20,45,90,.35);position:relative;z-index:2}
+.remind svg{width:66px;height:66px;flex:none;margin-top:4px}
+.remind b{color:var(--yellow);font-size:38px;letter-spacing:.5px}
+.remind .t{font-size:34px;line-height:1.35;color:#e7eefc}
+.remind .t .y{color:var(--yellow);font-weight:800}
+
+/* ==========================================================================
+   TELA 4 — REVELAÇÃO
+   ========================================================================== */
+.rev-kick{text-align:center;color:var(--yellow);font-weight:900;font-size:70px;
+  line-height:1.05;margin:32px 0 0;letter-spacing:.5px}
+.rev-card{position:relative;width:470px;margin:44px auto 0}
+.rev-card img{width:100%;display:block;border-radius:22px}
+.rev-card .warn{position:absolute;top:-26px;right:-58px;width:126px;height:126px;
+  filter:drop-shadow(0 6px 14px rgba(0,0,0,.55))}
+.rev-h{text-align:center;font-weight:900;font-size:76px;margin:48px 0 0}
+.flags{list-style:none;padding:0;margin:24px auto 0;width:760px;
+  font-size:44px;font-weight:400;text-align:left;color:#eef3ff}
+.flags li{display:flex;align-items:flex-start;gap:22px;margin:14px 0;line-height:1.25}
+.flags li::before{content:"";width:16px;height:16px;border-radius:50%;background:#fff;
+  flex:none;margin-top:18px}
+.rev-tag{position:absolute;right:62px;bottom:232px;text-align:right;
+  font-weight:900;font-size:76px;line-height:1.12;z-index:2}
+.rev-tag .y{color:var(--yellow)}
+
+/* ==========================================================================
+   TELA 5 — CHAMADA / MÁQUINA DA CAPIVARA
+   ========================================================================== */
+.cta-p{font-size:56px;font-weight:700;line-height:1.3;text-align:center;margin:40px 0 0}
+.cta-p .y{color:var(--yellow);font-weight:900}
+.hr{height:3px;background:rgba(120,170,230,.45);margin:38px 0}
+.cta-sub{font-size:46px;font-weight:800;text-align:center;line-height:1.35;margin:0}
+.claw{display:block;width:716px;margin:0 auto;position:absolute;left:50%;bottom:-24px;
+  transform:translateX(-50%);filter:drop-shadow(0 18px 40px rgba(0,0,0,.55))}
+
+/* ==========================================================================
+   TELA 6 — FORMULÁRIO
+   ========================================================================== */
+.form-h{text-align:center;font-weight:900;font-size:64px;line-height:1.1;margin:30px 0 0}
+.form-h .y{color:var(--yellow)}
+.form-sub{text-align:center;color:#c9d6f2;font-size:34px;margin:14px 0 0}
+form{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px;margin-top:30px;
+  flex:1;align-content:space-between}
+.field.wide{grid-column:1 / -1}
+.field label{display:block;font-size:30px;font-weight:700;margin:0 0 10px;color:#dbe6ff}
+.field label .req{color:var(--yellow)}
+.field input,.field select{width:100%;font-family:var(--font);font-size:38px;color:#fff;
+  background:rgba(255,255,255,.06);border:3px solid var(--line);border-radius:20px;padding:22px 22px}
+.field input::placeholder{color:#7f92b8}
+.field select{appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%239fb0d0' stroke-width='2.4' viewBox='0 0 24 24'%3E%3Cpath d='M5 9l7 7 7-7'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 24px center;background-size:34px 34px}
+.field input:focus,.field select:focus{outline:none;border-color:var(--yellow);background:rgba(255,255,255,.1)}
+.field.bad input,.field.bad select{border-color:#ff6b6b}
+.consent{grid-column:1 / -1;display:flex;gap:22px;align-items:flex-start;font-size:29px;
+  color:#c9d6f2;line-height:1.35;margin-top:4px}
+.consent input{width:46px;height:46px;flex:none;accent-color:var(--yellow);margin-top:2px}
+.err{grid-column:1 / -1;color:#ff8a8a;font-size:30px;min-height:36px;text-align:center;font-weight:700}
+.form-send{grid-column:1 / -1;display:flex;justify-content:center}
+
+/* ==========================================================================
+   TELA 7 — OBRIGADO
+   ========================================================================== */
+.thk-check{width:190px;height:190px;margin:60px auto 0;display:block}
+.thk-h{text-align:center;font-weight:900;font-size:78px;margin:28px 0 0}
+.thk-h .y{color:var(--yellow)}
+.thk-p{text-align:center;font-size:44px;font-weight:600;line-height:1.35;color:#eaf1ff;
+  width:880px;margin:22px auto 0}
+
+/* ==========================================================================
+   ORGANIZADOR (fora do palco — usa pixels reais da tela)
+   ========================================================================== */
+.modal{position:fixed;inset:0;background:rgba(2,10,26,.9);z-index:40;display:none;
+  align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto;backdrop-filter:blur(4px)}
+.modal.active{display:flex}
+.sheet{background:#0c1a37;border:1px solid var(--line);border-radius:18px;width:100%;max-width:520px;padding:20px}
+.sheet h2{margin:0 0 4px;font-size:22px}
+.sheet .count{color:var(--yellow);font-weight:800;font-size:15px;margin-bottom:14px}
+.leadlist{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+.leadrow{padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}
+.leadrow:last-child{border-bottom:0}
+.leadrow .nm{font-weight:800}
+.leadrow .meta{color:var(--mut);font-size:12.5px;margin-top:2px}
+.empty{padding:26px;text-align:center;color:var(--mut)}
+.admin-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.abtn{border:1.5px solid var(--line);background:rgba(255,255,255,.05);color:#fff;font-family:var(--font);
+  font-weight:800;font-size:15px;border-radius:12px;padding:14px;cursor:pointer;display:flex;gap:8px;align-items:center;justify-content:center}
+.abtn.pri{background:var(--yellow);color:var(--ink);border:0}
+.abtn.danger{color:#ff9a9a;border-color:#5a2030}
+.abtn svg{width:18px;height:18px}
+.abtn.wide{grid-column:1/3}
+.pinwrap{text-align:center;padding:10px 0}
+.pinwrap input{letter-spacing:12px;text-align:center;font-size:30px;width:180px;padding:12px;border-radius:12px;
+  background:rgba(255,255,255,.06);border:1.5px solid var(--line);color:#fff;font-family:var(--font)}
+.close{position:absolute;top:14px;right:16px;font-size:26px;color:#9fb0d0;background:0;border:0;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#12213f;border:1px solid var(--line);
+  color:#fff;padding:12px 20px;border-radius:40px;font-weight:700;z-index:50;opacity:0;transition:opacity .3s;pointer-events:none;font-size:15px}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<button class="gear" id="gearBtn" aria-label="admin">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#8aa0c8" stroke-width="1.4"><circle cx="12" cy="12" r="3.5"/><path d="M19.4 13a7.8 7.8 0 000-2l2-1.5-2-3.4-2.4 1a7.8 7.8 0 00-1.7-1L15 3H9l-.3 2.6a7.8 7.8 0 00-1.7 1l-2.4-1-2 3.4L2.6 11a7.8 7.8 0 000 2l-2 1.5 2 3.4 2.4-1c.5.4 1.1.7 1.7 1L9 21h6l.3-2.6c.6-.3 1.2-.6 1.7-1l2.4 1 2-3.4-2-1.5z"/></svg>
+</button>
+
+<div id="viewport">
+<div id="stage">
+
+  <!-- enfeites de fundo -->
+  <div class="deco dots tl"></div>
+  <div class="deco dots br"></div>
+  <svg class="deco seal" viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="86" stroke="#123061" stroke-width="13"/>
+    <path d="M58 104l28 28 58-64" stroke="#123061" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <!-- =================== TELA 1 — ABERTURA =================== -->
+  <section class="screen active" id="s-start">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <h1 class="title"><span class="b">APARÊNCIA</span><br><span class="y">ENGANA</span></h1>
+    <div class="mag-rule"><span class="ln"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FDC500" stroke-width="2.4"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.7-4.7"/></svg>
+      <span class="ln"></span></div>
+    <p class="sub">Descubra por que<br><span class="y">Background Check importa.</span></p>
+    <div class="feats">
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FDC500" stroke-width="1.7"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z"/></svg>
+        Decisões mais seguras</div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FDC500" stroke-width="1.7"><path d="M12 3l8 4v5c0 4.5-3.4 7.5-8 9-4.6-1.5-8-4.5-8-9V7l8-4z"/><path d="M12 8v4M12 15.5v.5"/></svg>
+        Reduza riscos</div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FDC500" stroke-width="1.7" stroke-linejoin="round"><path d="M3 21.5h18"/><path d="M5.5 21.5V6.5l7-4v19"/><path d="M12.5 21.5V10l6.5 3v8.5"/><path d="M8 8.5v1.4M8 12.4v1.4M8 16.3v1.4M16 14v1.4M16 17.6v1.4" stroke-width="2.2" stroke-linecap="round"/></svg>
+        Proteja sua empresa</div>
+    </div>
+    <div class="cta-right"><button class="btn" onclick="startApp()">PESQUISAR
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="2.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.7-4.7"/></svg></button></div>
+  </section>
+
+  <!-- =================== TELA 2 — ESCOLHA A VAGA =================== -->
+  <section class="screen" id="s-jobs">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <h1 class="h-screen">ESCOLHA A <span class="y">VAGA</span></h1>
+    <div class="spacer"></div>
+    <div class="jobgrid" id="jobgrid"></div>
+    <div class="spacer"></div>
+  </section>
+
+  <!-- =================== TELA 3 — CANDIDATOS =================== -->
+  <section class="screen" id="s-cands">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <div class="kicker"><span class="ln"></span>VOCÊ ESCOLHEU O CARGO<span class="ln"></span></div>
+    <div class="jobname" id="candJobName">BABÁ</div>
+    <p class="ask">Quem você <span class="y">escolheria</span> para essa vaga?</p>
+    <div class="candgrid" id="candgrid"></div>
+    <div class="remind">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FDC500" stroke-width="1.7"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.6.6 1 1.3 1 2.5h6c0-1.2.4-1.9 1-2.5A6 6 0 0012 3z"/></svg>
+      <div class="t"><b>LEMBRE-SE:</b><br>A aparência pode enganar. Descubra por que <span class="y">background check</span> importa.</div>
+    </div>
+  </section>
+
+  <!-- =================== TELA 4 — REVELAÇÃO =================== -->
+  <section class="screen" id="s-reveal">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <div class="rev-kick" id="revName">VOCÊ ESCOLHEU CARLA...</div>
+    <div class="rev-card">
+      <img id="revImg" src="" alt="">
+      <svg class="warn" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2z" fill="#c62828"/><path d="M12 9v5M12 17v.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <h2 class="rev-h">Mas havia:</h2>
+    <ul class="flags" id="revFlags"></ul>
+    <div class="spacer"></div>
+    <div class="rev-tag">É por isso que<br>existe <span class="y">Kavuka!</span></div>
+    <div class="cta-right"><button class="btn" onclick="show('s-cta')">CONTINUAR
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="3"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+  </section>
+
+  <!-- =================== TELA 5 — CHAMADA =================== -->
+  <section class="screen" id="s-cta">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <p class="cta-p">Agora você já sabe como o <span class="y">background check</span> ajuda sua empresa a contratar com <span class="y">mais segurança.</span></p>
+    <div class="hr"></div>
+    <p class="cta-sub">Responda uma pesquisa rápida <span style="color:var(--yellow)">*1 minuto</span><br>e ganhe uma chance na Máquina da Capivara</p>
+    <div class="cta-center" style="margin-top:46px;position:relative;z-index:2">
+      <button class="btn" onclick="show('s-form')">RESPONDA
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="3"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+    <img class="claw" src="{{CLAW}}" alt="Máquina da Capivara">
+  </section>
+
+  <!-- =================== TELA 6 — FORMULÁRIO =================== -->
+  <section class="screen" id="s-form">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <h1 class="form-h">Ganhe uma chance na <span class="y">Máquina da Capivara</span></h1>
+    <p class="form-sub">Para participar, é só responder:</p>
+    <form id="leadForm" novalidate autocomplete="on">
+      <div class="field wide"><label>Nome <span class="req">*</span></label><input name="nome" type="text" autocomplete="name" placeholder="Seu nome"></div>
+      <div class="field wide"><label>E-mail <span class="req">*</span></label><input name="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
+      <div class="field"><label>Cargo</label><input name="cargo" type="text" autocomplete="organization-title" placeholder="Ex.: Gerente de RH"></div>
+      <div class="field"><label>Telefone <span class="req">*</span></label><input name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000"></div>
+      <div class="field wide"><label>Empresa <span class="req">*</span></label><input name="empresa" type="text" autocomplete="organization" placeholder="Nome da empresa"></div>
+      <div class="field"><label>Quantidade de funcionários</label><select name="funcionarios">
+        <option value="">Selecione…</option><option>Até 50</option><option>51 a 100</option><option>101 a 200</option><option>201 a 500</option><option>Acima de 500</option></select></div>
+      <div class="field"><label>Ação</label><select name="acao">
+        <option value="">Selecione…</option><option>Agendar Reunião</option><option>Envio de Apresentação</option><option>Nenhuma ação</option></select></div>
+      <label class="consent"><input type="checkbox" name="consent"><span>Autorizo o contato da Kavuka&nbsp;by&nbsp;Guép e o tratamento dos meus dados conforme a LGPD.</span></label>
+      <div class="err" id="formErr"></div>
+      <div class="form-send"><button class="btn" type="submit">ENVIAR E GIRAR
+        <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="3"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+    </form>
+  </section>
+
+  <!-- =================== TELA 7 — OBRIGADO =================== -->
+  <section class="screen" id="s-thanks">
+    <img class="logo" src="{{LOGO}}" alt="Kavuka">
+    <svg class="thk-check" viewBox="0 0 96 96"><circle cx="48" cy="48" r="44" fill="none" stroke="#FDC500" stroke-width="5"/><path d="M30 49l12 12 24-26" fill="none" stroke="#FDC500" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h1 class="thk-h">Obrigado<span id="thkName"></span>!</h1>
+    <p class="thk-p">Seu cadastro foi salvo.<br><b>Mostre esta tela no estande</b> para girar a Máquina da Capivara.</p>
+    <div class="cta-center" style="margin-top:44px;position:relative;z-index:2">
+      <button class="btn ghost" onclick="resetToStart()">NOVO PARTICIPANTE</button></div>
+    <img class="claw" src="{{CLAW}}" alt="Máquina da Capivara">
+  </section>
+
+  <img class="mascot" id="mascot" src="{{MASCOT}}" alt="">
+  <button class="home" id="homeBtn" onclick="resetToStart()" aria-label="início">
+    <svg viewBox="0 0 24 24" fill="#FDC500"><path d="M12 3L2 11h3v9h5v-6h4v6h5v-9h3L12 3z"/></svg>
+  </button>
+
+</div>
+</div>
+
+<!-- ORGANIZADOR -->
+<div class="modal" id="admin">
+  <div class="sheet" style="position:relative">
+    <button class="close" onclick="closeAdmin()">×</button>
+    <div id="pinView">
+      <h2>Área do organizador</h2>
+      <div class="count">Digite o PIN para ver os leads</div>
+      <div class="pinwrap"><input id="pinInput" type="tel" maxlength="4" inputmode="numeric" placeholder="••••"></div>
+      <div class="err" id="pinErr" style="font-size:13px;min-height:16px"></div>
+      <div class="admin-btns"><button class="abtn pri wide" onclick="tryPin()">Entrar</button></div>
+    </div>
+    <div id="dataView" style="display:none">
+      <h2>Leads captados</h2>
+      <div class="count" id="leadCount">0 leads</div>
+      <div class="leadlist" id="leadList"></div>
+      <div class="admin-btns">
+        <button class="abtn pri" onclick="downloadCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="2"><path d="M12 3v12M7 11l5 4 5-4M4 20h16"/></svg>Baixar CSV</button>
+        <button class="abtn" onclick="shareCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8 11l8-5M8 13l8 5"/></svg>Compartilhar</button>
+        <button class="abtn danger wide" onclick="clearLeads()">Apagar todos os leads</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==========================================================================
+   ESCALA DO PALCO — encaixa o canvas 1242x2000 na tela do aparelho
+   ========================================================================== */
+const CANVAS_W = 1242, CANVAS_H = 2000;
+let lastW = 0, lastH = 0;
+function fitStage(){
+  const vw = window.innerWidth, vh = window.innerHeight;
+  // teclado abriu: a largura não mudou e a altura encolheu muito — mantém a escala
+  if(vw === lastW && vh < lastH && (lastH - vh) / lastH > 0.18) return;
+  lastW = vw; lastH = vh;
+  const k = Math.min(vw / CANVAS_W, vh / CANVAS_H);
+  document.documentElement.style.setProperty('--k', k);
+}
+fitStage();
+window.addEventListener('resize', fitStage);
+window.addEventListener('orientationchange', ()=>setTimeout(fitStage,120));
+
+/* ==========================================================================
+   DADOS
+   ========================================================================== */
+{{JOBS}}
+const ADMIN_PIN = "5288";
+const STORE_KEY = "kavuka_conarh_leads";
+const IDLE_MS = 120000; // 2 min sem interação volta ao início
+
+let sel = { job:null, cand:null };
+let leadsMem = [];
+
+/* ---------- storage ---------- */
+function loadLeads(){
+  try{ const raw=localStorage.getItem(STORE_KEY); leadsMem = raw?JSON.parse(raw):[]; }
+  catch(e){ /* file:// sem storage — usa memória */ }
+  return leadsMem;
+}
+function saveLeads(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(leadsMem)); }catch(e){}
+}
+
+/* ---------- navegação ---------- */
+const MASCOT_BY_SCREEN = { "s-start":"m-start", "s-cands":"m-cands", "s-reveal":"m-reveal" };
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const m = MASCOT_BY_SCREEN[id];
+  document.getElementById('mascot').className = 'mascot' + (m ? ' '+m : '');
+  // telas com botão grande no canto inferior direito não mostram a casinha
+  const SEM_CASINHA = ["s-start","s-reveal"];
+  document.getElementById('homeBtn').style.display = SEM_CASINHA.includes(id) ? "none" : "block";
+  resetIdle();
+}
+function resetToStart(){ sel={job:null,cand:null}; show('s-start'); }
+
+function startApp(){ goFullscreen(); show('s-jobs'); renderJobs(); }
+
+/* ---------- vagas ---------- */
+function renderJobs(){
+  const g=document.getElementById('jobgrid'); g.innerHTML='';
+  const odd = JOBS.length%2===1;
+  JOBS.forEach((j,i)=>{
+    const b=document.createElement('button'); b.className='job';
+    if(odd && i===JOBS.length-1) b.classList.add('solo');
+    const short = j.id==='financeiro'?"FINANCEIRO":j.title;
+    b.innerHTML=`<div class="ic"><img src="${j.icon}" alt=""></div><div class="lbl">${short}</div>`;
+    b.onclick=()=>selectJob(j);
+    g.appendChild(b);
+  });
+}
+function selectJob(j){
+  sel.job=j;
+  document.getElementById('candJobName').textContent=j.title;
+  const g=document.getElementById('candgrid'); g.innerHTML='';
+  j.cands.forEach(c=>{
+    const b=document.createElement('button'); b.className='cand';
+    b.innerHTML=`<img src="${c.img}" alt="${c.name}">`;
+    b.onclick=()=>selectCand(c);
+    g.appendChild(b);
+  });
+  show('s-cands');
+}
+function selectCand(c){
+  sel.cand=c;
+  document.getElementById('revName').textContent=`VOCÊ ESCOLHEU ${c.name}...`;
+  document.getElementById('revImg').src=c.img;
+  const ul=document.getElementById('revFlags');
+  ul.innerHTML=(c.flags||[]).map(f=>`<li>${esc(f)}</li>`).join('');
+  show('s-reveal');
+}
+
+/* ---------- formulário ---------- */
+document.getElementById('leadForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const f=e.target; const err=document.getElementById('formErr');
+  f.querySelectorAll('.field').forEach(x=>x.classList.remove('bad'));
+  const get=n=>f.elements[n].value.trim();
+  const need=['nome','email','telefone','empresa'];
+  let bad=false;
+  need.forEach(n=>{ if(!get(n)){ f.elements[n].closest('.field').classList.add('bad'); bad=true; }});
+  const email=get('email');
+  if(email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ f.elements['email'].closest('.field').classList.add('bad'); bad=true; }
+  const telDigits=get('telefone').replace(/\D/g,'');
+  if(get('telefone') && telDigits.length<10){ f.elements['telefone'].closest('.field').classList.add('bad'); bad=true; }
+  if(bad){ err.textContent='Confira os campos destacados.'; return; }
+  if(!f.elements['consent'].checked){ err.textContent='É preciso aceitar o uso dos dados (LGPD).'; return; }
+  err.textContent='';
+  const lead={
+    id:Date.now()+'-'+Math.round(Math.random()*1e6),
+    ts:new Date().toISOString(),
+    nome:get('nome'), email:email, cargo:get('cargo'), telefone:get('telefone'),
+    empresa:get('empresa'), funcionarios:get('funcionarios'), acao:get('acao'),
+    vaga: sel.job?sel.job.title:'', candidato: sel.cand?sel.cand.name:'', consent:'Sim'
+  };
+  leadsMem.push(lead); saveLeads();
+  const first=lead.nome.split(' ')[0];
+  document.getElementById('thkName').textContent=first?(', '+first):'';
+  f.reset();
+  show('s-thanks');
+  clearTimeout(window._thk); window._thk=setTimeout(resetToStart, 25000);
+});
+
+/* ---------- organizador ---------- */
+const gear=document.getElementById('gearBtn'); const adminEl=document.getElementById('admin');
+gear.onclick=openAdmin;
+function openAdmin(){ document.getElementById('pinView').style.display='block';
+  document.getElementById('dataView').style.display='none';
+  document.getElementById('pinInput').value=''; document.getElementById('pinErr').textContent='';
+  adminEl.classList.add('active'); setTimeout(()=>document.getElementById('pinInput').focus(),100); }
+function closeAdmin(){ adminEl.classList.remove('active'); }
+function tryPin(){
+  if(document.getElementById('pinInput').value===ADMIN_PIN){
+    document.getElementById('pinView').style.display='none';
+    document.getElementById('dataView').style.display='block';
+    renderLeads();
+  } else { document.getElementById('pinErr').textContent='PIN incorreto.'; }
+}
+document.getElementById('pinInput').addEventListener('keydown',e=>{ if(e.key==='Enter') tryPin(); });
+function fmtDate(iso){ const d=new Date(iso); const p=n=>String(n).padStart(2,'0');
+  return `${p(d.getDate())}/${p(d.getMonth()+1)} ${p(d.getHours())}:${p(d.getMinutes())}`; }
+function renderLeads(){
+  loadLeads();
+  document.getElementById('leadCount').textContent=leadsMem.length+' lead'+(leadsMem.length===1?'':'s');
+  const box=document.getElementById('leadList');
+  if(!leadsMem.length){ box.innerHTML='<div class="empty">Nenhum lead ainda.</div>'; return; }
+  box.innerHTML=leadsMem.slice().reverse().map(l=>
+    `<div class="leadrow"><div class="nm">${esc(l.nome)} · ${esc(l.empresa)}</div>
+     <div class="meta">${esc(l.email)} · ${esc(l.telefone)} · ${esc(l.vaga||'-')} → ${esc(l.candidato||'-')}${l.acao?' · '+esc(l.acao):''} · ${fmtDate(l.ts)}</div></div>`
+  ).join('');
+}
+function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+/* ---------- CSV ---------- */
+const CSV_COLS=[["ts","Data/Hora"],["nome","Nome"],["email","E-mail"],["cargo","Cargo"],
+  ["telefone","Telefone"],["empresa","Empresa"],["funcionarios","Qtd. Funcionários"],
+  ["acao","Ação"],["vaga","Vaga escolhida"],["candidato","Candidato escolhido"],["consent","Aceite LGPD"]];
+function csvCell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
+function buildCSV(){
+  loadLeads();
+  const head=CSV_COLS.map(c=>csvCell(c[1])).join(';');
+  const rows=leadsMem.map(l=>CSV_COLS.map(c=>{
+    let v=l[c[0]]; if(c[0]==='ts') v=fmtDate(l.ts); return csvCell(v);
+  }).join(';'));
+  return '﻿'+[head,...rows].join('\r\n');
+}
+function csvFilename(){ const d=new Date(),p=n=>String(n).padStart(2,'0');
+  return `leads-kavuka-conarh-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.csv`; }
+function downloadCSV(){
+  if(!leadsMem.length){ toast('Nenhum lead para exportar.'); return; }
+  const blob=new Blob([buildCSV()],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=csvFilename();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+  toast('CSV baixado ('+leadsMem.length+' leads).');
+}
+async function shareCSV(){
+  if(!leadsMem.length){ toast('Nenhum lead para compartilhar.'); return; }
+  const csv=buildCSV(); const fname=csvFilename();
+  try{
+    const file=new File([csv],fname,{type:'text/csv'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:'Leads Kavuka CONARH', text:'Leads captados no estande.'});
+      return;
+    }
+  }catch(e){ if(e && e.name==='AbortError') return; }
+  try{ await navigator.clipboard.writeText(csv); toast('Sem app de compartilhar — CSV copiado.'); }
+  catch(_){ downloadCSV(); }
+}
+function clearLeads(){
+  const n=leadsMem.length;
+  if(!n){ toast('Já está vazio.'); return; }
+  if(confirm('Apagar TODOS os '+n+' leads? Baixe o CSV antes. Esta ação não pode ser desfeita.')){
+    leadsMem=[]; saveLeads(); renderLeads(); toast('Leads apagados.');
+  }
+}
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show');
+  clearTimeout(window._tst); window._tst=setTimeout(()=>t.classList.remove('show'),2600); }
+
+/* ---------- tela cheia + inatividade ---------- */
+function goFullscreen(){ const el=document.documentElement;
+  if(el.requestFullscreen){ el.requestFullscreen().then(()=>setTimeout(fitStage,200)).catch(()=>{}); } }
+let idleT;
+function resetIdle(){ clearTimeout(idleT); idleT=setTimeout(()=>{
+  if(adminEl.classList.contains('active')) return;
+  if(document.getElementById('s-form').classList.contains('active') &&
+     document.activeElement && ['INPUT','SELECT'].includes(document.activeElement.tagName)) { resetIdle(); return; }
+  resetToStart();
+}, IDLE_MS); }
+['click','touchstart','keydown','input'].forEach(ev=>document.addEventListener(ev,resetIdle,{passive:true}));
+
+/* ---------- início ---------- */
+loadLeads();
+show('s-start');
+
+/* ---------- PWA offline ---------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
