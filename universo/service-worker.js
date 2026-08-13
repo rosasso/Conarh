@@ -1,4 +1,4 @@
-const CACHE = 'kavuka-universo-v5';
+const CACHE = 'kavuka-universo-v6';
 const ASSETS = [
   './',
   './index.html',

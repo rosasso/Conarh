@@ -180,6 +180,11 @@ ul.bul li b{font-weight:600;letter-spacing:.25px;color:var(--yellow)}
 .gov .p{font-size:13.5px;line-height:1.5;letter-spacing:.1px;color:#eaf1ff;font-weight:450}
 
 /* ---------- 4 · fecho ---------- */
+.ichbox{margin-top:20px;max-width:660px;border:1px solid rgba(247,181,0,.4);background:rgba(247,181,0,.07);
+  border-radius:15px;padding:14px 18px}
+.ichbox .h{font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--yellow);margin-bottom:7px}
+.ichbox .p{font-size:14.5px;line-height:1.5;color:#eaf1ff;font-weight:450}
+.ichbox .p b{font-weight:600;color:#fff}
 #s4 .end{font-size:58px;font-weight:800;line-height:1.02;letter-spacing:-1.4px;margin:0}
 #s4 .urls{display:flex;flex-direction:column;gap:11px;margin-top:26px}
 #s4 .u{display:flex;align-items:center;gap:13px;font-size:19px;font-weight:800}
@@ -439,15 +444,18 @@ body.portrait .rotate{display:flex}
     <div class="grow" style="max-height:30px"></div>
     <p class="end">Uma plataforma.<br>Três portas.<br><span class="y">Uma decisão melhor.</span></p>
     <div class="rule" style="margin-top:22px"></div>
-    <div class="urls">
-      <div class="u"><span class="tag">A EMPRESA</span><span class="d">gestor.kavuka.ai</span></div>
-      <div class="u"><span class="tag">A VAGA</span><span class="d">kavukavagas.com.br</span></div>
-      <div class="u"><span class="tag">A PESSOA</span><span class="d">candidato.kavuka.ai</span></div>
+    <div class="ichbox">
+      <div class="h">E A PESSOA SAI COM O CURRÍCULO PRONTO</div>
+      <div class="p">O <b>ICH — Identidade de Conhecimento e Habilidades</b> é um currículo dinâmico e <b>gratuito</b>: dados, habilidades e o resultado das avaliações comportamentais no mesmo documento. Monta por entrevista ou importando o currículo que ela já tem, imprime ou compartilha quando quiser — e leva com ela pro próximo processo.</div>
     </div>
     <div class="grow"></div>
-    <p class="lead" style="font-size:26px;font-weight:800;color:#fff">É por isso que existe <span class="y">Kavuka.</span></p>
-    <button class="restart" onclick="show(0)">
-      <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 108-8"/><path d="M4 5v7h7"/></svg>VER DE NOVO</button>
+    <p class="lead" style="font-size:22px;font-weight:800;color:#fff;max-width:620px">Se isso faz sentido pra você, <span class="y">deixe seus dados</span> e tenha acesso antecipado — e nos deixe um feedback.</p>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:16px">
+      <button class="fbtn" onclick="show(5)">DEIXAR MEUS DADOS
+        <svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;margin-left:8px;vertical-align:-3px"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+      <button class="restart" style="margin-top:0" onclick="show(0)">
+        <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 108-8"/><path d="M4 5v7h7"/></svg>VER DE NOVO</button>
+    </div>
     <img class="mascot" style="right:60px;bottom:0;width:344px" src="__MASCOT__" alt="">
   </section>
 
@@ -472,6 +480,7 @@ body.portrait .rotate{display:flex}
           <option value="">Selecione…</option><option>Agendar Reunião</option><option>Envio de Apresentação</option><option>Nenhuma ação</option></select></div>
         <div class="fd"><label>Vendedor <span class="rq">*</span></label><select name="vendedor">
           <option value="">Selecione…</option><option>Coelho</option><option>Afonso</option><option>Kleber</option><option>Rafa</option></select></div>
+        <div class="fd w"><label>Feedback <span style="color:var(--mut);font-weight:450;letter-spacing:0">— o que achou, o que faltou</span></label><input name="feedback" type="text" placeholder="Pode escrever à vontade"></div>
         <label class="cons"><input type="checkbox" name="consent"><span>Autorizo o contato da Kavuka&nbsp;by&nbsp;Guép e o tratamento dos meus dados conforme a LGPD.</span></label>
         <div class="frow"><button class="fbtn" type="submit">ENVIAR</button><span class="ferr" id="fErr"></span></div>
       </form>
@@ -669,7 +678,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     loadHub();
     hubLeads.push({ id:Date.now()+'-'+Math.round(Math.random()*1e6), ts:new Date().toISOString(),
       nome:get('nome'), email:get('email'), cargo:get('cargo'), telefone:get('telefone'), empresa:get('empresa'),
-      funcionarios:get('funcionarios'), acao:get('acao'), vendedor:get('vendedor'),
+      funcionarios:get('funcionarios'), acao:get('acao'), vendedor:get('vendedor'), feedback:get('feedback'),
       origem: f.dataset.origem?('conarh:'+f.dataset.origem):'hub', consent:'Sim' });
     saveHub();
     const pn=get('nome').split(' ')[0];
@@ -708,7 +717,7 @@ function renderH(){
 }
 const COLS_H=[['ts','Data/Hora'],['vendedor','Vendedor'],['nome','Nome'],['email','E-mail'],['cargo','Cargo'],
   ['telefone','Telefone'],['empresa','Empresa'],['funcionarios','Funcionários'],['acao','Ação'],
-  ['origem','Origem'],['consent','LGPD']];
+  ['feedback','Feedback'],['origem','Origem'],['consent','LGPD']];
 function cel(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }
 function csvH(){
   const head=COLS_H.map(c=>cel(c[1])).join(';');
