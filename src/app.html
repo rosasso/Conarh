@@ -436,6 +436,13 @@ window.addEventListener('orientationchange', ()=>setTimeout(fitStage,120));
    DADOS
    ========================================================================== */
 {{JOBS}}
+
+/* ---------- armazenamento persistente ----------
+   Sem isso o navegador pode descartar os leads pra liberar espaço. Com o app
+   instalado na tela de início, o Chrome costuma conceder direto.            */
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persisted().then(ok => { if (!ok) navigator.storage.persist(); }).catch(() => {});
+}
 const ADMIN_PIN = "5288";
 const STORE_KEY = "kavuka_conarh_leads";
 const IDLE_MS = 120000; // 2 min sem interação volta ao início

@@ -579,7 +579,7 @@ body.portrait .rotate{display:flex}
 </div>
 
 <script>
-const CHAPTERS = ["CONTEXTO", "PARA QUEM GERENCIA", "PARA QUEM É AVALIADO", "A VITRINE", "FECHO", "CADASTRO"];
+const CHAPTERS = ["CONTEXTO", "PARA QUEM GERENCIA", "PARA QUEM É AVALIADO", "A VITRINE", "FAÇA PARTE!", "CADASTRO"];
 const N = CHAPTERS.length;
 let cur = 0;
 
@@ -666,6 +666,13 @@ window.addEventListener('hashchange', ()=>{ const i=fromHash(); if(i!==cur) show
    Os dois apps rodam no MESMO endereço (localhost/Pages), então o hub lê o
    localStorage do quiz e oferece repetir o cadastro. Salvar é separado:
    quiz  -> kavuka_conarh_leads    hub -> kavuka_hub_leads                  */
+
+/* ---------- armazenamento persistente ----------
+   Sem isso o navegador pode descartar os leads pra liberar espaço. Com o app
+   instalado na tela de início, o Chrome costuma conceder direto.            */
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persisted().then(ok => { if (!ok) navigator.storage.persist(); }).catch(() => {});
+}
 const CONARH_KEY='kavuka_conarh_leads', HUB_KEY='kavuka_hub_leads', PIN_H='5288';
 let hubLeads=[];
 function escH(v){ return String(v==null?'':v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
