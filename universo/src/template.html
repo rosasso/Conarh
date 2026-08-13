@@ -749,29 +749,29 @@ document.addEventListener('DOMContentLoaded',()=>{
     const rot = document.getElementById('micTx');
     let rec = null, ligado = false, base = '';
     function parar(){ ligado=false; btn.classList.remove('on'); rot.textContent='FALAR'; try{ rec && rec.stop(); }catch(e){} }
-    // tenta reconhecer NO PRÓPRIO APARELHO (funciona offline). Onde o Chrome
-    // ainda não oferece isso, cai no serviço em nuvem — que exige internet.
-    async function tentarLocal(r){
+    // Descobre UMA VEZ, no carregamento, se dá pra reconhecer no próprio
+    // aparelho. Não dá pra checar no clique: qualquer await antes de start()
+    // derruba o "gesto do usuário" e o navegador recusa abrir o microfone.
+    let podeLocal = false;
+    (async () => {
       try{
         if(typeof SR.availableOnDevice === 'function'){
           const st = await SR.availableOnDevice('pt-BR');
-          if(st === 'available' || st === true){ r.processLocally = true; return true; }
-          if(typeof SR.installOnDevice === 'function'){ SR.installOnDevice('pt-BR').catch(()=>{}); }
-          return false;
+          podeLocal = (st === 'available' || st === true);
+          if(!podeLocal && typeof SR.installOnDevice === 'function') SR.installOnDevice('pt-BR').catch(()=>{});
         }
-        if('processLocally' in SR.prototype){ r.processLocally = true; return true; }
-      }catch(e){}
-      return false;
-    }
-    btn.addEventListener('click', async () => {
+      }catch(e){ podeLocal = false; }
+    })();
+    let semLocal = false; // vira true se o modo local falhar, pra não insistir
+    btn.addEventListener('click', () => {
       if(ligado){ parar(); return; }
-      rec = new SR();
-      rec.lang='pt-BR'; rec.continuous=true; rec.interimResults=true;
-      const local = await tentarLocal(rec);
-      if(!local && !navigator.onLine){
+      if(!podeLocal && !navigator.onLine){
         toastH('Sem internet: use o microfone do TECLADO do tablet (funciona offline) ou escreva.');
         return;
       }
+      rec = new SR();
+      rec.lang='pt-BR'; rec.continuous=true; rec.interimResults=true;
+      if(podeLocal && !semLocal){ try{ rec.processLocally = true; }catch(e){} }
       base = campo.value.trim();
       rec.onstart = () => { ligado=true; btn.classList.add('on'); rot.textContent='OUVINDO'; toastH('Pode falar — toque de novo pra parar.'); };
       rec.onresult = (ev) => {
@@ -785,10 +785,18 @@ document.addEventListener('DOMContentLoaded',()=>{
         campo.scrollTop = campo.scrollHeight;
       };
       rec.onerror = (ev) => {
+        const e0 = ev.error || 'desconhecido';
         parar();
-        if(ev.error==='not-allowed'||ev.error==='service-not-allowed') toastH('Microfone bloqueado — libere o acesso no navegador.');
-        else if(ev.error==='no-speech') toastH('Não ouvi nada. Toque em FALAR e tente de novo.');
-        else if(ev.error==='network') toastH('Sem rede: use o microfone do TECLADO do tablet (funciona offline) ou escreva.');
+        if(e0==='language-not-supported' && podeLocal && !semLocal){
+          semLocal = true; podeLocal = false;   // modelo local não serviu: cai pra nuvem
+          toastH('Trocando pro reconhecimento online — toque em FALAR de novo.');
+          return;
+        }
+        if(e0==='not-allowed'||e0==='service-not-allowed') toastH('Microfone bloqueado — libere o acesso do site nas permissões do navegador.');
+        else if(e0==='no-speech') toastH('Não ouvi nada. Toque em FALAR e fale mais perto.');
+        else if(e0==='audio-capture') toastH('Não achei microfone neste aparelho.');
+        else if(e0==='network') toastH('Sem rede: use o microfone do TECLADO do tablet (funciona offline) ou escreva.');
+        else toastH('Não consegui gravar (' + e0 + '). Dá pra escrever normalmente.');
       };
       rec.onend = () => { if(ligado) parar(); };
       try{ rec.start(); }catch(e){ parar(); toastH('Não consegui abrir o microfone.'); }
