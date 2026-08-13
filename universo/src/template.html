@@ -776,8 +776,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         toastH('Sem internet: use o microfone do TECLADO do tablet (funciona offline) ou escreva.');
         return;
       }
+      const androide = /Android/i.test(navigator.userAgent);
       rec = new SR();
-      rec.lang='pt-BR'; rec.continuous=true; rec.interimResults=true;
+      // No Android o reconhecimento fecha a cada frase mesmo com continuous=true;
+      // aí religamos sozinho no onend enquanto o botão estiver ligado.
+      rec.lang='pt-BR'; rec.continuous = !androide; rec.interimResults=true;
       if(podeLocal && !semLocal){ try{ rec.processLocally = true; }catch(e){} }
       base = campo.value.trim();
       rec.onstart = () => { ligado=true; btn.classList.add('on'); rot.textContent='OUVINDO'; toastH('Pode falar — toque de novo pra parar.'); };
@@ -805,7 +808,14 @@ document.addEventListener('DOMContentLoaded',()=>{
         else if(e0==='network') toastH('Sem rede: use o microfone do TECLADO do tablet (funciona offline) ou escreva.');
         else toastH('Não consegui gravar (' + e0 + '). Dá pra escrever normalmente.');
       };
-      rec.onend = () => { if(ligado) parar(); };
+      rec.onend = () => {
+        if(!ligado) return;
+        if(androide){                       // religa e segue ouvindo
+          base = campo.value.trim();
+          try{ rec.start(); return; }catch(e){}
+        }
+        parar();
+      };
       try{ rec.start(); }catch(e){ parar(); toastH('Não consegui abrir o microfone.'); }
     });
     // ao enviar ou trocar de tela, para de ouvir

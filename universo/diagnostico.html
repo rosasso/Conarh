@@ -1,14 +1,49 @@
-<!doctype html><meta charset="utf-8"><body style="font:15px monospace;background:#111;color:#0f0;padding:18px">
-<div id="o">…</div><script>
+<!doctype html><html lang="pt-BR"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kavuka · teste de microfone</title>
+<style>
+body{margin:0;background:#02112d;color:#eaf1ff;font:16px/1.5 -apple-system,system-ui,Roboto,Arial;padding:20px}
+h1{font-size:20px;margin:0 0 4px} .s{color:#9fb0d0;font-size:13px;margin-bottom:16px}
+button{background:#F7B500;color:#12213f;border:0;border-radius:30px;padding:13px 22px;font-weight:800;font-size:15px;margin:0 8px 10px 0}
+button.g{background:transparent;color:#cfe0ff;border:1px solid rgba(255,255,255,.25)}
+pre{background:#0c1c3d;border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:12px;white-space:pre-wrap;font-size:13px}
+.ok{color:#7ee787}.no{color:#ff9c9c}
+</style>
+<h1>Teste de microfone — Kavuka</h1>
+<div class="s">Abra no tablet, toque nos botões e me mande o print desta tela.</div>
+<button onclick="permissao()">1 · TESTAR MICROFONE</button>
+<button onclick="ligar()">2 · TESTAR TRANSCRIÇÃO</button>
+<button class="g" onclick="location.reload()">LIMPAR</button>
+<pre id="log">…</pre>
+<script>
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-const l=[];
-l.push('SpeechRecognition: '+(SR?'sim':'NÃO'));
-l.push('isSecureContext: '+window.isSecureContext);
-l.push('availableOnDevice (API existe?): '+(SR&&typeof SR.availableOnDevice==='function'?'sim':'NÃO'));
-l.push('installOnDevice: '+(SR&&typeof SR.installOnDevice==='function'?'sim':'NÃO'));
-l.push('processLocally (prop no proto): '+(SR&&('processLocally' in SR.prototype)?'sim':'NÃO'));
-l.push('navigator.onLine: '+navigator.onLine);
-l.push('UA: '+navigator.userAgent.slice(0,90));
-document.getElementById('o').innerHTML=l.join('<br>');
-if(SR&&SR.availableOnDevice){ SR.availableOnDevice('pt-BR').then(r=>{ document.getElementById('o').innerHTML+='<br>availableOnDevice("pt-BR") = '+r; }); }
-</script></body>
+const L=[]; const el=document.getElementById('log');
+function log(t,cls){ L.push(cls?`<span class="${cls}">${t}</span>`:t); el.innerHTML=L.join('\n'); }
+log('Navegador: '+navigator.userAgent);
+log('HTTPS (contexto seguro): '+(window.isSecureContext?'sim':'NÃO'),window.isSecureContext?'ok':'no');
+log('SpeechRecognition: '+(SR?'existe':'NÃO EXISTE'),SR?'ok':'no');
+log('Online: '+navigator.onLine);
+log('Reconhecimento local (availableOnDevice): '+(SR&&SR.availableOnDevice?'API existe':'não exposta'));
+if(SR&&SR.availableOnDevice){ SR.availableOnDevice('pt-BR').then(r=>log('availableOnDevice("pt-BR") = '+r)); }
+async function permissao(){
+  try{
+    const st=await navigator.mediaDevices.getUserMedia({audio:true});
+    log('Permissão do microfone: CONCEDIDA','ok');
+    st.getTracks().forEach(t=>t.stop());
+  }catch(e){ log('Permissão do microfone: '+e.name+' — '+e.message,'no'); }
+}
+let rec=null;
+function ligar(){
+  if(!SR){ log('Sem SpeechRecognition neste navegador','no'); return; }
+  rec=new SR(); rec.lang='pt-BR'; rec.interimResults=true;
+  rec.continuous=!/Android/i.test(navigator.userAgent);
+  rec.onstart=()=>log('start: ouvindo… fale alguma coisa','ok');
+  rec.onaudiostart=()=>log('audiostart (áudio chegando)');
+  rec.onspeechstart=()=>log('speechstart (detectou fala)');
+  rec.onresult=e=>{ let t=''; for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript;
+    log('TRANSCREVEU: "'+t+'"','ok'); };
+  rec.onerror=e=>log('ERRO: '+e.error,'no');
+  rec.onend=()=>log('end (encerrou)');
+  try{ rec.start(); }catch(e){ log('start falhou: '+e.message,'no'); }
+}
+</script></html>
