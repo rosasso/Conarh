@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#02112d">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Universo Kavuka">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Kavuka · O Universo</title>
+<style>
+:root{
+  --navy:#02112d; --navy2:#0a2150; --card:#0c1c3d; --card2:#0e2148;
+  --yellow:#F7B500; --yellow-d:#e0a300;
+  --white:#fff; --ink:#12213f; --mut:#9fb0d0; --mut2:#c9d6f2;
+  --line:rgba(255,255,255,.14); --line2:rgba(255,255,255,.09);
+  --font:'Avenir Next','Segoe UI',system-ui,-apple-system,Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden}
+body{
+  font-family:var(--font);color:var(--white);background:#010b1f;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+}
+#fit{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 90% at 50% 30%,#0b2454 0%,#061838 48%,#02102a 78%,#010b1f 100%)}
+#stage{position:relative;width:1280px;height:800px;flex:none;transform-origin:center center;overflow:hidden;
+  background:radial-gradient(110% 95% at 50% 25%,#0b2454 0%,#061838 50%,#02102a 80%,#010b1f 100%)}
+.dots{position:absolute;inset:0;pointer-events:none;opacity:.5;z-index:0;
+  background-image:radial-gradient(rgba(255,255,255,.06) 1.6px,transparent 1.7px);background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 40%,transparent 50%,#000 100%);
+          mask-image:radial-gradient(120% 90% at 50% 40%,transparent 50%,#000 100%)}
+
+/* ---------- chrome ---------- */
+.hdr{position:absolute;top:0;left:0;right:0;height:82px;z-index:8;display:flex;align-items:center;
+  justify-content:space-between;padding:0 104px 0 44px}
+.hdr.hide{opacity:0;pointer-events:none}
+.hdr img{height:38px;display:block}
+.chapter{display:flex;align-items:center;gap:12px;color:var(--yellow);font-weight:800;font-size:14px;letter-spacing:2.4px}
+.chapter .ln{height:2px;width:44px;background:var(--yellow);opacity:.65}
+
+.nav{position:absolute;bottom:0;left:0;right:0;height:76px;z-index:9;display:flex;align-items:center;
+  justify-content:space-between;padding:0 30px}
+.nav.hide{opacity:0;pointer-events:none}
+.nbtn{width:56px;height:56px;border-radius:50%;border:1.5px solid var(--line);background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:none;transition:transform .08s}
+.nbtn:active{transform:scale(.92);background:rgba(255,255,255,.12)}
+.nbtn[disabled]{opacity:.28}
+.nbtn svg{width:26px;height:26px;fill:none;stroke:#dbe6ff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.nbtn.pri{border:0;background:linear-gradient(180deg,var(--yellow),var(--yellow-d));box-shadow:0 8px 22px rgba(247,181,0,.26)}
+.nbtn.pri svg{stroke:var(--ink)}
+.segs{display:flex;gap:6px;align-items:center}
+.seg{width:26px;height:5px;border-radius:4px;background:rgba(255,255,255,.16);cursor:pointer;transition:background .2s}
+.seg.on{background:var(--yellow)}
+.seg.past{background:rgba(247,181,0,.42)}
+.count{font-size:13px;font-weight:800;color:var(--mut);letter-spacing:1.4px;margin-left:14px;min-width:52px}
+
+.tapz{position:absolute;top:82px;bottom:76px;width:12%;z-index:6;cursor:pointer}
+.tapz.l{left:0} .tapz.r{right:0}
+
+.menu-btn{position:absolute;top:0;right:0;width:82px;height:82px;z-index:10;background:transparent;border:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+.menu-btn svg{width:26px;height:26px;stroke:#8aa0c8;stroke-width:2.4;fill:none;stroke-linecap:round}
+
+/* ---------- slides ---------- */
+.slide{position:absolute;inset:0;z-index:2;padding:96px 60px 92px;display:none;flex-direction:column}
+.slide.on{display:flex;animation:in .42s cubic-bezier(.22,.9,.28,1)}
+@keyframes in{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+.slide.back.on{animation:inb .42s cubic-bezier(.22,.9,.28,1)}
+@keyframes inb{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+
+h1.t{font-size:52px;font-weight:800;line-height:1.02;letter-spacing:-.8px;margin:0 0 6px}
+h1.t .y{color:var(--yellow)}
+.lead{font-size:21px;font-weight:450;letter-spacing:.15px;line-height:1.5;color:var(--mut2);max-width:900px;margin:6px 0 0}
+.lead .y{color:var(--yellow);font-weight:600}
+.lead b{color:#fff;font-weight:600}
+.rule{height:2px;width:96px;background:var(--yellow);opacity:.9;margin:16px 0 0;border-radius:2px}
+.y{color:var(--yellow)}
+.mut{color:var(--mut)}
+.grow{flex:1}
+.cols{display:flex;gap:34px;flex:1;min-height:0}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+
+.card{background:linear-gradient(180deg,rgba(18,42,88,.62),rgba(10,26,58,.5));border:1px solid var(--line);
+  border-radius:18px;padding:20px 22px}
+.card h3{margin:0 0 6px;font-size:20px;font-weight:800;letter-spacing:-.2px}
+.card p{margin:0;font-size:15.5px;line-height:1.42;color:var(--mut2);font-weight:500}
+.card .ic{width:34px;height:34px;margin-bottom:10px;display:block}
+.card .ic svg{width:34px;height:34px;fill:none;stroke:var(--yellow);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.grid{display:grid;gap:16px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.grid.fill{flex:1;min-height:0}
+.grid.fill>.card{display:flex;flex-direction:column}
+
+ul.bul{list-style:none;padding:0;margin:14px 0 0}
+ul.bul li{display:block;position:relative;padding-left:23px;margin:0 0 16px;font-size:18px;line-height:1.5;font-weight:450;letter-spacing:.15px;color:#d5e1f5}
+ul.bul li::before{content:"";position:absolute;left:0;top:10px;width:9px;height:9px;border-radius:50%;background:var(--yellow)}
+ul.bul li b{font-weight:600;letter-spacing:.25px;color:var(--yellow)}
+ul.bul.sm li{font-size:16px;margin-bottom:10px;padding-left:19px}
+ul.bul.sm li::before{width:7px;height:7px;top:7px}
+
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(247,181,0,.42);background:rgba(247,181,0,.10);
+  color:#ffd766;border-radius:30px;padding:5px 13px;font-size:13px;font-weight:800;letter-spacing:.3px}
+.chip.n{border-color:var(--line);background:rgba(255,255,255,.05);color:var(--mut2)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+
+.mascot{position:absolute;z-index:3;pointer-events:none;filter:drop-shadow(0 14px 34px rgba(0,0,0,.5))}
+
+/* ---------- cover ---------- */
+#s0{padding:0}
+#s0 .wrap{position:absolute;left:74px;top:0;bottom:0;width:700px;display:flex;flex-direction:column;justify-content:center}
+#s0 img.lg{height:56px;width:auto;align-self:flex-start;margin-bottom:30px}
+#s0 .big{font-size:88px;font-weight:800;line-height:.94;letter-spacing:-2.4px;margin:0}
+#s0 .magr{display:flex;align-items:center;gap:12px;margin:22px 0 20px}
+#s0 .magr .ln{height:2px;width:78px;background:var(--yellow)}
+#s0 .magr svg{width:32px;height:32px;fill:none;stroke:var(--yellow);stroke-width:2.4;stroke-linecap:round}
+#s0 .sub{font-size:24px;font-weight:700;line-height:1.4;color:#dbe6ff;max-width:560px}
+#s0 .sub .y{color:var(--yellow);font-weight:800}
+#s0 .foot{position:absolute;left:74px;bottom:34px;font-size:13px;font-weight:800;letter-spacing:2.4px;color:var(--mut)}
+#s0 .startb{position:absolute;right:44px;bottom:30px;z-index:7;display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(180deg,var(--yellow),var(--yellow-d));color:var(--ink);font-weight:800;font-size:21px;
+  border:0;border-radius:60px;padding:19px 34px;cursor:pointer;font-family:var(--font);letter-spacing:.4px;
+  box-shadow:0 12px 30px rgba(247,181,0,.3);transition:transform .08s}
+#s0 .startb:active{transform:scale(.96)}
+#s0 .startb svg{width:24px;height:24px;fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.kglyph{position:absolute;right:-40px;top:-60px;font-size:620px;font-weight:800;color:rgba(255,255,255,.022);
+  line-height:1;letter-spacing:-30px;pointer-events:none;z-index:1}
+
+/* ---------- prints dos ambientes ---------- */
+.shots{display:grid;grid-template-columns:1.62fr 1fr;gap:26px;margin-top:14px;flex:1;min-height:0;align-content:start}
+.shot{display:flex;flex-direction:column;min-width:0}
+.frame{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#08152f;
+  box-shadow:0 20px 44px rgba(0,0,0,.5)}
+.frame .bar{display:flex;align-items:center;gap:7px;padding:8px 12px;background:rgba(255,255,255,.07);
+  border-bottom:1px solid var(--line)}
+.frame .bar i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.2);display:block;flex:none}
+.frame .bar .u{margin-left:10px;font-size:11.5px;font-weight:700;color:#a9bade;
+  font-family:ui-monospace,'SF Mono',Menlo,monospace;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.frame img{display:block;width:100%;height:auto}
+/* trava a altura pra caber na tela — corta a dobra de baixo do print, nunca o topo */
+.shots .shot:nth-child(1) .frame img{max-height:398px;object-fit:cover;object-position:top}
+.shots .shot:nth-child(2) .frame img{max-height:290px;object-fit:cover;object-position:top}
+.shot .cap{margin-top:11px;font-size:14.5px;line-height:1.34;font-weight:600;color:var(--mut2)}
+.shots .shot:nth-child(2) .cap{font-size:13.5px}
+.shot .cap b{color:#fff;font-weight:800}
+.shot .tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:1.6px;
+  color:var(--yellow);margin-bottom:9px}
+.livechip{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(70,220,150,.45);
+  background:rgba(70,220,150,.10);color:#7ee6b0;border-radius:30px;padding:5px 13px;font-size:12px;font-weight:800;letter-spacing:1.2px}
+.livechip i{width:8px;height:8px;border-radius:50%;background:#43d68c;display:block}
+
+/* ---------- as 3 frentes do RH ---------- */
+.rhf{display:flex;flex-direction:column;gap:13px}
+.rhrow{display:flex;align-items:center;gap:18px;border:1px solid var(--line);border-radius:16px;padding:16px 20px;
+  background:linear-gradient(180deg,rgba(18,42,88,.55),rgba(10,26,58,.45))}
+.rhrow .ico{width:46px;height:46px;border-radius:13px;border:1px solid rgba(247,181,0,.42);background:rgba(247,181,0,.10);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.rhrow .ico svg{width:26px;height:26px;fill:none;stroke:var(--yellow);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.rhrow .tx{flex:1;min-width:0}
+.rhrow .nm{font-size:19px;font-weight:600;letter-spacing:.2px;line-height:1.2}
+.rhrow .ds{font-size:14px;color:var(--mut2);margin-top:5px;line-height:1.45;letter-spacing:.1px;font-weight:450}
+.rhrow .who{font-size:11.5px;font-weight:700;letter-spacing:1.6px;color:var(--yellow);flex:none;text-align:right;width:96px}
+.vals{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+
+/* ---------- doors (universo) ---------- */
+.doors{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:4px;flex:1;min-height:0}
+.door{position:relative;text-align:left;background:linear-gradient(180deg,rgba(18,42,88,.6),rgba(10,26,58,.5));
+  border:1.5px solid var(--line);border-radius:20px;padding:20px 20px 18px;cursor:pointer;font-family:var(--font);
+  color:#fff;transition:border-color .2s,background .2s,transform .1s;
+  display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start}
+.door:active{transform:scale(.985)}
+.door.on{border-color:var(--yellow);background:linear-gradient(180deg,rgba(52,40,10,.55),rgba(20,32,60,.5))}
+.door .num{position:absolute;top:16px;right:18px;font-size:13px;font-weight:800;color:var(--yellow);letter-spacing:1.6px}
+.door svg.dic{width:40px;height:40px;fill:none;stroke:var(--yellow);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;margin-bottom:11px}
+.door .nm{font-size:23px;font-weight:800;line-height:1.05;letter-spacing:-.3px}
+.door .url{font-size:13px;font-weight:800;color:var(--yellow);margin-top:5px;letter-spacing:.2px}
+.door .who{font-size:14.5px;color:var(--mut2);margin-top:9px;line-height:1.35;font-weight:600}
+.door .det{max-height:0;overflow:hidden;transition:max-height .32s ease,opacity .25s;opacity:0}
+.door.on .det{max-height:190px;opacity:1}
+.door .hint{margin-top:auto;padding-top:14px;display:flex;align-items:center;gap:9px;font-size:11.5px;font-weight:800;
+  letter-spacing:1.6px;color:var(--mut)}
+.door .hint span.p{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(247,181,0,.6);color:var(--yellow);
+  display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;flex:none}
+.door.on .hint{display:none}
+.door .det ul{list-style:none;padding:0;margin:13px 0 0;border-top:1px solid var(--line);padding-top:12px}
+.door .det li{display:flex;gap:9px;font-size:14px;line-height:1.3;font-weight:600;color:#eaf1ff;margin-bottom:8px}
+.door .det li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--yellow);flex:none;margin-top:6px}
+.flowbar{display:flex;align-items:center;gap:12px;margin-top:20px;border:1px solid var(--line);border-radius:16px;
+  padding:14px 20px;background:rgba(255,255,255,.035)}
+.flowbar .st{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:700;color:#e7eefc;white-space:nowrap}
+.flowbar .st span.n{width:22px;height:22px;border-radius:50%;background:var(--yellow);color:var(--ink);
+  font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.flowbar svg{width:20px;height:20px;fill:none;stroke:rgba(247,181,0,.7);stroke-width:2.4;stroke-linecap:round;flex:none}
+
+/* ---------- fases (gestor) ---------- */
+.phases{display:flex;gap:0;margin-top:18px}
+.phase{flex:1;position:relative;padding:0 14px 0 0;display:flex;flex-direction:column}
+.phase .p{min-height:60px}
+.phase .sub{list-style:none;padding:0;margin:14px 0 0;border-top:1px solid var(--line2);padding-top:12px}
+.phase .sub li{position:relative;padding-left:15px;font-size:13.5px;font-weight:700;color:#dbe6ff;margin-bottom:7px;line-height:1.25}
+.phase .sub li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:rgba(247,181,0,.85)}
+.phase .bar{height:6px;border-radius:4px;background:rgba(247,181,0,.28);margin-bottom:13px;position:relative}
+.phase .bar::after{content:"";position:absolute;left:0;top:0;height:6px;width:26px;border-radius:4px;background:var(--yellow)}
+.phase .n{font-size:12px;font-weight:800;letter-spacing:1.6px;color:var(--yellow)}
+.phase .h{font-size:19px;font-weight:800;margin:3px 0 7px;line-height:1.05}
+.phase .p{font-size:14px;line-height:1.36;color:var(--mut2);font-weight:600}
+
+/* ---------- camadas ---------- */
+.layers{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.layer{display:flex;align-items:center;gap:16px;border:1px solid var(--line2);border-radius:14px;
+  padding:9px 16px;background:rgba(255,255,255,.035)}
+.layer .n{width:34px;height:34px;border-radius:10px;background:rgba(247,181,0,.14);border:1px solid rgba(247,181,0,.4);
+  color:var(--yellow);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
+.layer.syn{border-color:rgba(247,181,0,.5);background:rgba(247,181,0,.08)}
+.layer.syn .n{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.layer .tx{flex:1;min-width:0}
+.layer .h{font-size:17px;font-weight:600;letter-spacing:.2px;line-height:1.25}
+.layer .q{font-size:13.5px;color:var(--mut2);font-weight:450;letter-spacing:.1px;margin-top:3px;line-height:1.35;font-style:italic}
+.layer .ins{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:530px}
+.layer .ins .i{font-size:11.5px;font-weight:800;color:var(--mut2);border:1px solid var(--line);border-radius:20px;padding:3px 9px;white-space:nowrap}
+.layer.syn .ins .i{color:#ffd766;border-color:rgba(247,181,0,.45)}
+
+/* ---------- json card ---------- */
+.code{background:rgba(3,12,30,.72);border:1px solid var(--line);border-radius:16px;padding:16px 18px;
+  font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:13.5px;line-height:1.65;color:#cfe0ff;overflow:hidden}
+.code .k{color:var(--yellow)} .code .s{color:#8fd9a8} .code .c{color:#6d80a6}
+
+/* ---------- perfis ---------- */
+.profiles{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:14px}
+.pf{border:1px solid var(--line);border-radius:16px;padding:15px 15px 14px;background:rgba(255,255,255,.04)}
+.pf svg{width:30px;height:30px;fill:none;stroke:var(--yellow);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;margin-bottom:9px;display:block}
+.pf .nm{font-size:17px;font-weight:800}
+.pf .ds{font-size:13px;color:var(--mut);font-weight:600;margin-top:4px;line-height:1.32}
+.gauge{margin-top:16px;border:1px solid var(--line);border-radius:16px;padding:16px 20px;background:rgba(255,255,255,.035)}
+.gauge .lb{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--mut);letter-spacing:1.2px}
+.gauge .track{height:12px;border-radius:8px;background:rgba(255,255,255,.1);margin:11px 0 9px;position:relative;overflow:hidden}
+.gauge .fill{position:absolute;left:0;top:0;bottom:0;width:74%;border-radius:8px;
+  background:linear-gradient(90deg,rgba(247,181,0,.45),var(--yellow))}
+.gauge .note{font-size:13.5px;color:var(--mut2);font-weight:600}
+
+/* ---------- timeline 17 ---------- */
+.tl{margin-top:16px;flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
+.tl .row{display:flex;gap:8px;flex:1;min-height:0;max-height:118px}
+.tl .st{flex:1;border:1px solid var(--line2);border-radius:12px;padding:9px 10px;background:rgba(255,255,255,.035);min-width:0;
+  display:flex;flex-direction:column;justify-content:center}
+.tl .st.hi{border-color:var(--yellow);background:rgba(247,181,0,.12)}
+.tl .st .n{font-size:11px;font-weight:800;color:var(--yellow);letter-spacing:1px}
+.tl .st .h{font-size:13px;font-weight:700;line-height:1.22;margin-top:3px;color:#eaf1ff}
+.tl .st.hi .h{font-weight:800;color:#fff}
+.tl .lbl{font-size:12px;font-weight:800;letter-spacing:1.6px;color:var(--mut);width:112px;flex:none;
+  display:flex;align-items:center;line-height:1.3}
+
+/* ---------- fecho ---------- */
+#s16 .end{font-size:60px;font-weight:800;line-height:1.02;letter-spacing:-1.4px;margin:0}
+#s16 .urls{display:flex;flex-direction:column;gap:11px;margin-top:26px}
+#s16 .u{display:flex;align-items:center;gap:13px;font-size:19px;font-weight:800}
+#s16 .u .tag{font-size:12px;font-weight:800;letter-spacing:1.6px;color:var(--mut);width:118px;flex:none}
+#s16 .u .d{color:var(--yellow)}
+.restart{margin-top:18px;align-self:flex-start;display:inline-flex;align-items:center;gap:10px;
+  background:transparent;color:#cfe0ff;border:1.5px solid var(--line);border-radius:60px;padding:13px 24px;
+  font-family:var(--font);font-weight:800;font-size:16px;cursor:pointer;letter-spacing:.3px}
+.restart:active{background:rgba(255,255,255,.09)}
+.restart svg{width:20px;height:20px;fill:none;stroke:var(--yellow);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- sumário ---------- */
+.ov{position:absolute;inset:0;z-index:20;background:rgba(2,10,26,.94);display:none;padding:54px 60px;
+  backdrop-filter:blur(3px)}
+.ov.on{display:block;animation:in .25s ease}
+.ov h2{margin:0 0 20px;font-size:30px;font-weight:800}
+.ov .list{display:grid;grid-template-columns:repeat(2,1fr);gap:11px 20px}
+.ov .it{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:14px;padding:13px 16px;
+  cursor:pointer;background:rgba(255,255,255,.04);text-align:left;font-family:var(--font);color:#fff}
+.ov .it:active{background:rgba(255,255,255,.1)}
+.ov .it.cur{border-color:var(--yellow);background:rgba(247,181,0,.1)}
+.ov .it .n{font-size:13px;font-weight:800;color:var(--yellow);width:26px;flex:none}
+.ov .it .h{font-size:16.5px;font-weight:700}
+.ov .close{position:absolute;top:34px;right:44px;width:52px;height:52px;border-radius:50%;border:1.5px solid var(--line);
+  background:rgba(255,255,255,.06);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ov .close svg{width:24px;height:24px;stroke:#dbe6ff;stroke-width:2.6;fill:none;stroke-linecap:round}
+
+.rotate{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  background:#02112d;color:#fff;font-weight:800;font-size:22px;text-align:center;padding:40px}
+.rotate svg{width:78px;height:78px;fill:none;stroke:var(--yellow);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+body.portrait .rotate{display:flex}
+</style>
+</head>
+<body>
+
+<div class="rotate">
+  <svg viewBox="0 0 48 48"><rect x="5" y="15" width="38" height="21" rx="3"/><path d="M18 6l-5 5 5 5"/><path d="M13 11h11a9 9 0 019 9"/></svg>
+  Gire o tablet para a horizontal
+</div>
+
+<div id="fit">
+<div id="stage">
+  <div class="dots"></div>
+
+  <!-- ===================== 0 · CAPA ===================== -->
+  <section class="slide on" id="s0">
+    <div class="kglyph">K</div>
+    <div class="wrap">
+      <img class="lg" src="__LOGO__" alt="Kavuka">
+      <h1 class="big">O <span class="y">UNIVERSO</span><br>KAVUKA</h1>
+      <div class="magr"><span class="ln"></span>
+        <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.7-4.7"/></svg>
+        <span class="ln"></span></div>
+      <p class="sub">Uma plataforma. <span class="y">Três portas:</span> a empresa, a vaga e a pessoa.</p>
+    </div>
+    <div class="foot">GUÉP · INTELIGÊNCIA APLICADA A PESSOAS</div>
+    <img class="mascot" style="right:60px;bottom:0;width:352px" src="__MASCOT__" alt="">
+    <button class="startb" onclick="start()">COMEÇAR
+      <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+  </section>
+
+  <!-- ===================== 1 · A GUÉP ===================== -->
+  <section class="slide" id="s1">
+    <h1 class="t">ANTES DO KAVUKA,<br>A <span class="y">GUÉP</span></h1>
+    <div class="rule"></div>
+    <div class="cols" style="margin-top:22px">
+      <div class="col" style="max-width:452px">
+        <p class="lead">A GUÉP é uma casa de <b>inteligência de dados e decisão</b>: risco, antifraude, logística e automação.</p>
+        <p class="lead" style="font-size:18px;margin-top:14px">Cada frente resolve um tipo de decisão. O <span class="y">Kavuka</span> é a frente que decide sobre <b>gente</b>.</p>
+        <ul class="bul sm" style="margin-top:16px">
+          <li>Sede em <b>Santo André / SP</b> — duas estruturas próprias</li>
+          <li>Operação nacional, atendimento B2B</li>
+          <li>Base tecnológica própria: dados, IA e automação</li>
+        </ul>
+        <div class="grow"></div>
+        <div class="chapter" style="margin:18px 0 10px"><span class="ln"></span>VALORES DA CASA</div>
+        <div class="vals" style="margin-top:0">
+          <span class="chip n">Paixão</span><span class="chip n">Comprometimento</span><span class="chip n">Ética</span>
+          <span class="chip n">Igualdade</span><span class="chip n">Cuidar de pessoas</span><span class="chip n">Trabalho &amp; diversão</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="chapter" style="margin-bottom:12px"><span class="ln"></span>AS TRÊS FRENTES DO RH</div>
+        <div class="rhf">
+          <div class="rhrow">
+            <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 14h5M7 17h3"/><circle cx="17" cy="15" r="2"/></svg></div>
+            <div class="tx">
+              <div class="nm">Gestor de RH</div>
+              <div class="ds">O painel da empresa: abre a vaga, tria, ranqueia e acompanha quem entrou.</div>
+            </div>
+            <div class="who">QUEM<br>CONTRATA</div>
+          </div>
+          <div class="rhrow">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 7h18v13a1 1 0 01-1 1H4a1 1 0 01-1-1V7z"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18"/></svg></div>
+            <div class="tx">
+              <div class="nm">Kavuka Vagas</div>
+              <div class="ds">A vitrine pública: onde a vaga aparece para o mundo e a candidatura começa.</div>
+            </div>
+            <div class="who">QUEM<br>PROCURA</div>
+          </div>
+          <div class="rhrow">
+            <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/><path d="M17 4l2 2 3-3"/></svg></div>
+            <div class="tx">
+              <div class="nm">Candidato</div>
+              <div class="ds">O portal da pessoa: responde as avaliações e guarda a própria identidade.</div>
+            </div>
+            <div class="who">QUEM É<br>AVALIADO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flowbar">
+      <div class="st"><span class="n">•</span>O Kavuka nasce dentro dessa casa — com a mesma engenharia de dados que sustenta as outras frentes.</div>
+    </div>
+  </section>
+
+  <!-- ===================== 2 · O PROBLEMA ===================== -->
+  <section class="slide" id="s2">
+    <h1 class="t">A <span class="y">APARÊNCIA</span> ENGANA</h1>
+    <div class="rule"></div>
+    <div class="cols" style="margin-top:24px">
+      <div class="col" style="max-width:600px">
+        <p class="lead">O RH decide sobre pessoas com as três ferramentas mais frágeis que existem.</p>
+        <ul class="bul" style="margin-top:20px">
+          <li><b>O currículo</b> conta só o que o candidato quer contar.</li>
+          <li><b>A entrevista</b> mede quem se apresenta melhor — não quem entrega melhor.</li>
+          <li><b>A indicação</b> transfere a confiança, não a verificação.</li>
+        </ul>
+        <p class="lead" style="margin-top:20px;font-size:19px">O que não foi visto na seleção não desaparece:
+          reaparece como <span class="y">rotatividade, retrabalho e risco</span> — jurídico, operacional e de reputação.</p>
+      </div>
+      <div class="col" style="max-width:342px;flex:none;justify-content:center">
+        <div class="card" style="border-color:rgba(247,181,0,.4);background:rgba(247,181,0,.07)">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3l9-16z"/><path d="M12 10v4M12 17v.5"/></svg></div>
+          <h3>O custo chega depois</h3>
+          <p>Uma contratação errada é paga em meses de operação: desligamento, novo processo, treinamento perdido e o efeito no time que ficou.</p>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="ic"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.7-4.7"/></svg></div>
+          <h3>Verificar é barato</h3>
+          <p>O background check e a leitura de comportamento custam uma fração do erro que evitam — e acontecem antes da assinatura.</p>
+        </div>
+      </div>
+      <div style="width:150px;flex:none"></div>
+    </div>
+    <img class="mascot" style="right:14px;bottom:96px;width:164px;opacity:.95" src="__MASCOT__" alt="">
+  </section>
+
+  <!-- ===================== 3 · A VIRADA ===================== -->
+  <section class="slide" id="s3">
+    <h1 class="t">DE CURRÍCULO A<br><span class="y">INTELIGÊNCIA HUMANA</span></h1>
+    <div class="rule"></div>
+    <p class="lead" style="margin-top:18px">O Kavuka não é um lugar para guardar currículo. É a plataforma que <b>transforma currículo em informação de decisão</b> — para os dois lados da mesa.</p>
+    <div class="grid g3 fill" style="margin-top:26px;align-content:center">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></div>
+        <h3>ICH</h3>
+        <p><b>Identidade de Conhecimento e Habilidades.</b> Substitui o currículo tradicional: estrutura o que a pessoa sabe, sabe fazer e comprova.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 00-7 7c0 2 1 3 1 5M18 10a6 6 0 00-6-6"/><path d="M9 20c0-3 1-4 1-7a2 2 0 114 0c0 3-1 4-1 7"/><path d="M15 10a3 3 0 00-3-3"/></svg></div>
+        <h3>KYID</h3>
+        <p><b>Conheça Sua Identidade.</b> A identidade comportamental da pessoa — portátil, dela, e reaproveitável no próximo processo.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path d="M12 12l4-3"/><path d="M12 3v2M21 12h-2M12 19v2M5 12H3"/></svg></div>
+        <h3>Score Humano</h3>
+        <p><b>Índice de síntese GUÉP.</b> Consolida as avaliações em um número explicável — e sempre com o porquê ao lado.</p>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flowbar">
+      <div class="st"><span class="n">1</span>O candidato ganha uma identidade</div>
+      <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      <div class="st"><span class="n">2</span>A empresa ganha comparação justa</div>
+      <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      <div class="st"><span class="n">3</span>A decisão fica registrada e defensável</div>
+    </div>
+  </section>
+
+  <!-- ===================== 4 · O UNIVERSO ===================== -->
+  <section class="slide" id="s4">
+    <h1 class="t">TRÊS PORTAS,<br><span class="y">UMA ÚNICA BASE</span></h1>
+    <p class="lead" style="margin-top:10px;font-size:19px">Toque em cada porta. São três produtos com públicos diferentes — e um só banco de dados por trás.</p>
+    <div class="doors">
+      <button class="door on" data-door="1" onclick="door(this)">
+        <div class="num">PORTA 1</div>
+        <svg class="dic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 14h5M7 17h3"/><circle cx="17" cy="15" r="2"/></svg>
+        <div class="nm">GESTOR DE RH</div>
+        <div class="url">gestor.kavuka.ai</div>
+        <div class="who">Quem contrata. Painel da empresa: da abertura da vaga ao acompanhamento de quem entrou.</div>
+        <div class="det"><ul>
+          <li>Cadastra a vaga e o perfil ideal</li>
+          <li>Recebe, tria e ranqueia os candidatos</li>
+          <li>Dispara avaliações e background check</li>
+          <li>Acompanha 30/60/90 e o banco de talentos</li>
+        </ul></div>
+        <div class="hint"><span class="p">+</span>TOQUE PARA VER</div>
+      </button>
+      <button class="door" data-door="2" onclick="door(this)">
+        <div class="num">PORTA 2</div>
+        <svg class="dic" viewBox="0 0 24 24"><path d="M3 7h18v13a1 1 0 01-1 1H4a1 1 0 01-1-1V7z"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 12h18"/><path d="M11 12v2h2v-2"/></svg>
+        <div class="nm">KAVUKA VAGAS</div>
+        <div class="url">kavukavagas.com.br</div>
+        <div class="who">Quem procura. A vitrine pública: onde a vaga aparece para o mundo e a candidatura começa.</div>
+        <div class="det"><ul>
+          <li>Vitrine aberta, sem login para navegar</li>
+          <li>Filtros por cidade, área, nível e tipo</li>
+          <li>Página própria por vaga</li>
+          <li>Candidatura com currículo em PDF</li>
+        </ul></div>
+        <div class="hint"><span class="p">+</span>TOQUE PARA VER</div>
+      </button>
+      <button class="door" data-door="3" onclick="door(this)">
+        <div class="num">PORTA 3</div>
+        <svg class="dic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/><path d="M17 4l2 2 3-3"/></svg>
+        <div class="nm">CANDIDATO</div>
+        <div class="url">candidato.kavuka.ai</div>
+        <div class="who">Quem é avaliado. O portal da pessoa: onde ela responde, entende e guarda a própria identidade.</div>
+        <div class="det"><ul>
+          <li>Responde as avaliações comportamentais</li>
+          <li>Recebe a leitura do próprio perfil (KYID)</li>
+          <li>Acompanha as candidaturas</li>
+          <li>Recebe trilhas da Academy por lacuna</li>
+        </ul></div>
+        <div class="hint"><span class="p">+</span>TOQUE PARA VER</div>
+      </button>
+    </div>
+    <div class="grow"></div>
+    <div class="flowbar">
+      <div class="st"><span class="n">1</span>Vaga criada no Gestor</div>
+      <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      <div class="st"><span class="n">2</span>Publicada na Vitrine</div>
+      <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      <div class="st"><span class="n">3</span>Candidato avaliado no Portal</div>
+      <svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      <div class="st"><span class="n">4</span>Ranking volta pro Gestor</div>
+    </div>
+  </section>
+
+  <!-- ===================== 5 · GESTOR ===================== -->
+  <section class="slide" id="s5">
+    <h1 class="t">PORTA 1 · O <span class="y">GESTOR DE RH</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:19px"><span class="y">gestor.kavuka.ai</span> — o processo inteiro em um lugar, sem planilha paralela.</p>
+    <div class="phases">
+      <div class="phase">
+        <div class="bar"></div><div class="n">FASE 1</div><div class="h">Definir</div>
+        <div class="p">Abre a demanda e desenha o perfil ideal da vaga antes de sair procurando.</div>
+        <ul class="sub"><li>Geração da demanda</li><li>Perfil ideal da vaga</li><li>Estruturação operacional</li></ul>
+      </div>
+      <div class="phase">
+        <div class="bar"></div><div class="n">FASE 2</div><div class="h">Publicar &amp; captar</div>
+        <div class="p">Publicação multicanal e captação ativa, inclusive por WhatsApp.</div>
+        <ul class="sub"><li>Publicação multicanal</li><li>Captação inteligente</li><li>Engajamento contínuo</li></ul>
+      </div>
+      <div class="phase">
+        <div class="bar"></div><div class="n">FASE 3</div><div class="h">Avaliar</div>
+        <div class="p">Triagem de currículo, avaliações comportamentais e background check.</div>
+        <ul class="sub"><li>Triagem de currículo</li><li>Questionários aplicados</li><li>Background check</li></ul>
+      </div>
+      <div class="phase">
+        <div class="bar"></div><div class="n">FASE 4</div><div class="h">Decidir</div>
+        <div class="p">Painel analítico, entrevistas, teste prático e ranking explicável.</div>
+        <ul class="sub"><li>Painel analítico</li><li>Entrevista e teste prático</li><li>Ranking e proposta</li></ul>
+      </div>
+      <div class="phase" style="padding-right:0">
+        <div class="bar"></div><div class="n">FASE 5</div><div class="h">Acompanhar</div>
+        <div class="p">Onboarding, avaliação contínua 30/60/90 e banco de talentos.</div>
+        <ul class="sub"><li>Onboarding</li><li>Avaliação 30/60/90</li><li>Banco de talentos</li></ul>
+      </div>
+    </div>
+    <div class="cols" style="flex:none;gap:24px;margin-top:30px">
+      <div class="col">
+        <div class="chapter" style="margin-bottom:10px"><span class="ln"></span>O QUE MUDA NO DIA A DIA</div>
+        <ul class="bul sm">
+          <li>Vaga no ar sem depender de terceiro</li>
+          <li>Fila triada antes de você abrir o primeiro PDF</li>
+          <li>Candidatos comparados pelos mesmos critérios</li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="chapter" style="margin-bottom:10px"><span class="ln"></span>O QUE FICA REGISTRADO</div>
+        <ul class="bul sm">
+          <li>Por que cada candidato subiu ou caiu no ranking</li>
+          <li>Quais avaliações foram aplicadas e quando</li>
+          <li>O histórico continua depois da contratação</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grow"></div>
+    <div class="flowbar">
+      <div class="st"><span class="n">•</span>Da abertura da vaga ao 90º dia, no mesmo lugar — e sem depender de planilha paralela.</div>
+    </div>
+  </section>
+
+  <!-- ===================== 6 · GESTOR POR DENTRO ===================== -->
+  <section class="slide" id="s6">
+    <h1 class="t">O GESTOR, <span class="y">POR DENTRO</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:18px">Não é maquete: é a tela que o RH usa.</p>
+    <div class="shots">
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <div class="bar"><i></i><i></i><i></i><span class="u">gestor.kavuka.ai/kanban</span></div>
+          <img src="__SHOT_KANBAN__" alt="">
+        </div>
+        <figcaption class="cap"><b>O funil inteiro numa tela.</b> Todos os candidatos × todas as vagas abertas. Arrasta o card para mudar de etapa.</figcaption>
+      </figure>
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <div class="bar"><i></i><i></i><i></i><span class="u">gestor.kavuka.ai/candidatos</span></div>
+          <img src="__SHOT_ANA__" alt="">
+        </div>
+        <figcaption class="cap"><b>O dossiê do candidato.</b> Score Humano, distância até a vaga, currículo estruturado e as camadas de avaliação já aplicadas.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== 6 · VAGAS ===================== -->
+  <section class="slide" id="s7">
+    <h1 class="t">PORTA 2 · <span class="y">KAVUKA VAGAS</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:19px"><span class="y">kavukavagas.com.br</span> — a porta de entrada do ecossistema. Não substitui nada: complementa.</p>
+    <div class="cols" style="margin-top:20px">
+      <div class="col">
+        <div class="grid g2 fill" style="grid-template-columns:1fr 1fr">
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></div>
+            <h3>Vitrine com filtro</h3>
+            <p>Cidade, área, nível e tipo de contratação. O candidato acha a vaga certa sem criar conta antes.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h6M7 13h10M7 17h4"/></svg></div>
+            <h3>Página por vaga</h3>
+            <p>Cada vaga tem endereço próprio — dá para compartilhar em qualquer canal e indexar no Google.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 4 5-4"/><path d="M4 20h16"/></svg></div>
+            <h3>Candidatura direta</h3>
+            <p>Dados + currículo em PDF. Uma candidatura por vaga: sem duplicidade na fila do RH.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M15 7h3a3 3 0 010 6h-3M9 17H6a3 3 0 010-6h3"/><path d="M8 12h8"/></svg></div>
+            <h3>Passagem sem senha</h3>
+            <p>Ao se candidatar, o candidato já entra logado no portal dele — não precisa criar acesso do zero.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="max-width:330px">
+        <div class="chapter" style="margin-bottom:12px"><span class="ln"></span>O SEGREDO</div>
+        <p class="lead" style="font-size:18px">A vaga é criada <b>uma vez</b>, no Gestor. Marcada como pública, ela aparece na vitrine automaticamente.</p>
+        <p class="lead" style="font-size:18px;margin-top:14px">A candidatura entra <b>direto na fila da empresa</b> — nada é redigitado, nada se perde no e-mail.</p>
+        <div class="card" style="margin-top:auto;border-color:rgba(247,181,0,.4);background:rgba(247,181,0,.07)">
+          <h3 style="font-size:18px">Uma vaga, um dono</h3>
+          <p>A empresa continua dona do processo. A vitrine é alcance — não terceiriza a decisão.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 8 · VITRINE POR DENTRO ===================== -->
+  <section class="slide" id="s8">
+    <h1 class="t">A VITRINE, <span class="y">POR DENTRO</span></h1>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:10px">
+      <span class="livechip"><i></i>NO AR HOJE</span>
+      <span class="lead" style="font-size:17px;margin:0">kavukavagas.com.br — qualquer pessoa pode abrir agora.</span>
+    </div>
+    <div class="shots" style="margin-top:16px">
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <div class="bar"><i></i><i></i><i></i><span class="u">kavukavagas.com.br</span></div>
+          <img src="__SHOT_VHOME__" alt="">
+        </div>
+        <figcaption class="cap"><b>A porta de entrada.</b> Busca por cargo e cidade, sem precisar criar conta para navegar.</figcaption>
+      </figure>
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <div class="bar"><i></i><i></i><i></i><span class="u">kavukavagas.com.br/vagas</span></div>
+          <img src="__SHOT_VVAGAS__" alt="">
+        </div>
+        <figcaption class="cap"><b>Vitrine com filtro.</b> Modelo de trabalho, tipo de contratação e nível — e cada vaga com página própria.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== 7 · CANDIDATO ===================== -->
+  <section class="slide" id="s9">
+    <h1 class="t">PORTA 3 · O <span class="y">CANDIDATO</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:19px"><span class="y">candidato.kavuka.ai</span> — pela primeira vez, quem é avaliado <b>sai com algo na mão.</b></p>
+    <div class="cols" style="margin-top:20px">
+      <div class="col" style="max-width:520px">
+        <div class="chapter" style="margin-bottom:12px"><span class="ln"></span>KYID · CONHEÇA SUA IDENTIDADE</div>
+        <p class="lead" style="font-size:18px">O mercado financeiro tem <b>KYC</b> — conheça seu cliente. O RH tem <b>KYE</b> — conheça seu funcionário. Faltava o lado da pessoa.</p>
+        <ul class="bul" style="margin-top:16px">
+          <li><b>É dela.</b> A identidade comportamental fica com o candidato, não com a vaga.</li>
+          <li><b>É portátil.</b> Serve no próximo processo seletivo, sem refazer tudo.</li>
+          <li><b>É legível.</b> Escrita em primeira pessoa: suas forças, seus pontos de atenção.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="grid fill" style="grid-template-columns:1fr 1fr">
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+            <h3>Super Trunfo</h3>
+            <p>O perfil vira um card visual: forças, pontos de atenção e estilo de atuação num relance.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6l8-3 8 3-8 3-8-3z"/><path d="M4 6v6c0 3 4 5 8 6 4-1 8-3 8-6V6"/></svg></div>
+            <h3>Academy</h3>
+            <p>Onde aparece lacuna, aparece trilha de estudo. A avaliação deixa de ser só um filtro.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><path d="M12 14v2"/></svg></div>
+            <h3>Controle do que compartilha</h3>
+            <p>A pessoa entende o que foi medido e decide o que vai adiante em cada processo.</p>
+          </div>
+          <div class="card">
+            <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 18V9M10 18V5M16 18v-6M22 18H2"/></svg></div>
+            <h3>Candidaturas à vista</h3>
+            <p>Onde se candidatou, em que etapa está e quais avaliações já respondeu.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 10 · CANDIDATO POR DENTRO ===================== -->
+  <section class="slide" id="s10">
+    <h1 class="t">O CANDIDATO, <span class="y">POR DENTRO</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:18px">O único lugar do processo em que a pessoa também ganha algo.</p>
+    <div class="shots">
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <div class="bar"><i></i><i></i><i></i><span class="u">candidato.kavuka.ai/portal</span></div>
+          <img src="__SHOT_PME__" alt="">
+        </div>
+        <figcaption class="cap"><b>O portal da pessoa.</b> A candidatura confirmada, a etapa em que ela está e as avaliações que faltam responder.</figcaption>
+      </figure>
+      <div class="shot">
+        <div class="frame">
+          <div class="bar"><i></i><i></i><i></i><span class="u">candidato.kavuka.ai/kyid</span></div>
+          <img src="__SHOT_KYID__" alt="">
+        </div>
+        <figcaption class="cap"><b>A KYID.</b> Identidade comportamental validada, com QR de verificação e endereço público. Ela leva para o próximo processo — e o Score Humano vem junto.</figcaption>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 8 · CAMADAS ===================== -->
+  <section class="slide" id="s11">
+    <h1 class="t">AS AVALIAÇÕES:<br><span class="y">SEIS CAMADAS</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:18px">Nenhum teste isolado descreve uma pessoa. Cada camada responde a uma pergunta diferente.</p>
+    <div class="layers">
+      <div class="layer"><div class="n">1</div><div class="tx"><div class="h">Base científica</div><div class="q">quem a pessoa é</div></div>
+        <div class="ins"><span class="i">Big Five</span><span class="i">IPIP (domínio público)</span><span class="i">Perfil tipológico · modelo adaptado</span></div></div>
+      <div class="layer"><div class="n">2</div><div class="tx"><div class="h">Comportamento</div><div class="q">como age no dia a dia</div></div>
+        <div class="ins"><span class="i">DISC · modelo adaptado</span><span class="i">Label · instrumento GUÉP</span></div></div>
+      <div class="layer"><div class="n">3</div><div class="tx"><div class="h">Performance</div><div class="q">onde gera resultado</div></div>
+        <div class="ins"><span class="i">Mapa de forças · modelo adaptado</span></div></div>
+      <div class="layer"><div class="n">4</div><div class="tx"><div class="h">Risco</div><div class="q">como age sob pressão</div></div>
+        <div class="ins"><span class="i">Tríade sombria (SD3)</span><span class="i">Inventário de derailers · adaptado</span></div></div>
+      <div class="layer"><div class="n">5</div><div class="tx"><div class="h">Identidade e motivação</div><div class="q">por que age assim</div></div>
+        <div class="ins"><span class="i">Arquétipos (12 tipos)</span><span class="i">Eneagrama</span></div></div>
+      <div class="layer syn"><div class="n">6</div><div class="tx"><div class="h">Síntese GUÉP</div><div class="q">o que isso significa para esta vaga</div></div>
+        <div class="ins"><span class="i">Score Humano</span><span class="i">Classificação comportamental</span><span class="i">Avaliação contínua</span></div></div>
+    </div>
+    <div class="grow"></div>
+    <p class="lead" style="font-size:15px;color:var(--mut)">Modelos proprietários de mercado nunca são copiados: entram como <b>modelo adaptado GUÉP, com itens autorais.</b></p>
+  </section>
+
+  <!-- ===================== 9 · MICROSSERVIÇOS ===================== -->
+  <section class="slide" id="s12">
+    <h1 class="t">DOZE INSTRUMENTOS,<br><span class="y">UM CONTRATO</span></h1>
+    <div class="cols" style="margin-top:20px">
+      <div class="col" style="max-width:520px">
+        <p class="lead" style="font-size:19px">Cada questionário é um <b>serviço independente</b>. Todos devolvem a resposta no mesmo formato — então dá para trocar, somar ou desligar um instrumento sem refazer a plataforma.</p>
+        <ul class="bul" style="margin-top:18px">
+          <li><b>Aplicação por link</b> — web, enviado por e-mail ou WhatsApp</li>
+          <li><b>Aplicação conversacional</b> — perguntas em sequência no WhatsApp, para perfis operacionais</li>
+          <li><b>Tempo definido</b> por avaliação, contado no servidor</li>
+        </ul>
+        <div class="chips" style="margin-top:18px">
+          <span class="chip">Etapa 8 · aplicação</span>
+          <span class="chip">Etapa 10 · painel</span>
+          <span class="chip">Etapa 13 · ranking</span>
+          <span class="chip">Etapa 16 · avaliação contínua</span>
+        </div>
+        <p class="lead" style="font-size:15px;color:var(--mut);margin-top:12px">Os quatro pontos do processo em que as avaliações entram.</p>
+      </div>
+      <div class="col">
+        <div class="chapter" style="margin-bottom:12px"><span class="ln"></span>O MESMO ENVELOPE, SEMPRE</div>
+        <div class="code">
+<span class="c">// resposta de qualquer instrumento</span><br>
+{<br>
+&nbsp;&nbsp;<span class="k">"instrument"</span>: <span class="s">"big_five"</span>,<br>
+&nbsp;&nbsp;<span class="k">"version"</span>: <span class="s">"1.0.0"</span>,<br>
+&nbsp;&nbsp;<span class="k">"scores"</span>: { … },<br>
+&nbsp;&nbsp;<span class="k">"interpretation"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">"strengths"</span>, <span class="k">"watchouts"</span>, <span class="k">"narrative"</span><br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;<span class="k">"norm_source"</span>: <span class="s">"…"</span>,&nbsp;&nbsp;<span class="c">// de onde vem a norma</span><br>
+&nbsp;&nbsp;<span class="k">"confidence"</span>: <span class="s">"clear | moderate | low"</span>,<br>
+&nbsp;&nbsp;<span class="k">"score_weight"</span>: <span class="s">"peso no Score Humano"</span><br>
+}
+        </div>
+        <p class="lead" style="font-size:15.5px;margin-top:14px">Além da nota, o envelope carrega <b>a origem da norma, a confiança da medida e o peso</b> daquele instrumento. É isso que permite auditar o resultado depois.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 10 · SCORE + FIT ===================== -->
+  <section class="slide" id="s13">
+    <h1 class="t"><span class="y">SCORE HUMANO</span> E FIT</h1>
+    <p class="lead" style="margin-top:8px;font-size:19px">A síntese não é um veredito. É uma leitura comparável, com o porquê ao lado.</p>
+    <div class="profiles">
+      <div class="pf">
+        <svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        <div class="nm">Executor</div><div class="ds">Tira do papel e fecha</div>
+      </div>
+      <div class="pf">
+        <svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7l7-4z"/><path d="M12 12l7-4M12 12v9M12 12L5 8"/></svg>
+        <div class="nm">Estrategista</div><div class="ds">Enxerga o tabuleiro inteiro</div>
+      </div>
+      <div class="pf">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/></svg>
+        <div class="nm">Operador</div><div class="ds">Sustenta o processo rodando</div>
+      </div>
+      <div class="pf">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 20v-1a7 7 0 0111-5.7"/><path d="M17 11l5 5M22 11l-5 5"/></svg>
+        <div class="nm">Influenciador</div><div class="ds">Move gente e articula</div>
+      </div>
+    </div>
+    <p class="lead" style="font-size:15px;color:var(--mut);margin-top:10px">Taxonomia autoral GUÉP — não é a tradução de nenhum modelo de mercado.</p>
+    <div class="gauge">
+      <div class="lb"><span>SCORE HUMANO</span><span class="y">SEMPRE EXPLICÁVEL</span></div>
+      <div class="track"><div class="fill"></div></div>
+      <div class="note">Um número só vale se vier com a conta: quais camadas pesaram, quanto, e o que ficou de fora.</div>
+    </div>
+    <div class="grid g3 fill" style="margin-top:16px;gap:14px">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l3 6 6 1-4.5 4.3 1 6.2L12 17.8 6.5 20.5l1-6.2L3 10l6-1 3-6z"/></svg></div>
+        <h3 style="font-size:18px">Fit Vaga-Pessoa</h3>
+        <p>O quanto o perfil conversa com o que a vaga realmente exige — não com o que o anúncio diz.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></div>
+        <h3 style="font-size:18px">Fit Vida-Trabalho</h3>
+        <p>Distância, rotina e qualidade de vida. O motivo silencioso de boa parte das desistências.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l4-5 3 3 5-7"/></svg></div>
+        <h3 style="font-size:18px">People Intelligence</h3>
+        <p>O que a empresa aprende no agregado: onde o funil trava, quais perfis ficam e quais saem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 11 · GOVERNANÇA ===================== -->
+  <section class="slide" id="s14">
+    <h1 class="t">O QUE NOS TORNA<br><span class="y">DEFENSÁVEIS</span></h1>
+    <p class="lead" style="margin-top:8px;font-size:19px">Medir comportamento é sério. As regras vêm antes do produto.</p>
+    <div class="grid g3" style="margin-top:22px">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3z"/></svg></div>
+        <h3>Consentimento explícito</h3>
+        <p>Ninguém é avaliado sem saber. O candidato autoriza, e sabe para que serve cada avaliação.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-1a7 7 0 0114 0v1"/><path d="M17 3l2 2 3-3"/></svg></div>
+        <h3>Revisão humana</h3>
+        <p>A LGPD dá ao titular o direito de pedir revisão de decisão automatizada. A tela de contestação é obrigatória, não opcional.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 8l7-3 7 3"/><path d="M5 8l-2 6h4l-2-6zM19 8l-2 6h4l-2-6z"/></svg></div>
+        <h3>Explicabilidade</h3>
+        <p>Todo Score vem com a decomposição. Se não é possível explicar por que um candidato caiu, o número não é usado.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h10M4 19h7"/><path d="M17 16l3 3 3-3" transform="translate(-3,-1)"/></svg></div>
+        <h3>Linguagem responsável</h3>
+        <p>Sinalização não é diagnóstico clínico. Nenhum rótulo estigmatizante entra nos textos — e há teste automático que bloqueia esse vocabulário.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7h-5M21 7v5"/></svg></div>
+        <h3>Norma transparente</h3>
+        <p>Enquanto a validação brasileira não estiver concluída, a origem da norma usada aparece declarada no resultado.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><path d="M15 17h6M18 14v6"/></svg></div>
+        <h3>Sem dupla contagem</h3>
+        <p>Instrumentos que medem a mesma coisa não somam duas vezes no Score. Peso zero é uma decisão técnica, não um esquecimento.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 12 · JORNADA 17 ===================== -->
+  <section class="slide" id="s15">
+    <h1 class="t">A JORNADA <span class="y">COMPLETA</span></h1>
+    <p class="lead" style="margin-top:6px;font-size:18px">Dezessete etapas, da demanda ao banco de talentos. Em <span class="y">amarelo</span>, onde as avaliações comportamentais entram.</p>
+    <div class="tl">
+      <div class="row">
+        <div class="lbl">DEFINIR</div>
+        <div class="st"><div class="n">01</div><div class="h">Geração da demanda</div></div>
+        <div class="st"><div class="n">02</div><div class="h">Perfil ideal</div></div>
+        <div class="st"><div class="n">03</div><div class="h">Estruturação operacional</div></div>
+        <div class="st"><div class="n">04</div><div class="h">Publicação multicanal</div></div>
+        <div class="st"><div class="n">05</div><div class="h">Captação inteligente</div></div>
+        <div class="st"><div class="n">06</div><div class="h">Triagem de currículo</div></div>
+      </div>
+      <div class="row">
+        <div class="lbl">AVALIAR</div>
+        <div class="st"><div class="n">07</div><div class="h">Engajamento contínuo</div></div>
+        <div class="st hi"><div class="n">08</div><div class="h">Aplicação dos questionários</div></div>
+        <div class="st"><div class="n">09</div><div class="h">Background check</div></div>
+        <div class="st hi"><div class="n">10</div><div class="h">Painel analítico</div></div>
+        <div class="st"><div class="n">11</div><div class="h">Entrevistas</div></div>
+        <div class="st"><div class="n">12</div><div class="h">Teste prático</div></div>
+      </div>
+      <div class="row">
+        <div class="lbl">DECIDIR<br>E CUIDAR</div>
+        <div class="st hi"><div class="n">13</div><div class="h">Decisão final e ranking</div></div>
+        <div class="st"><div class="n">14</div><div class="h">Proposta e contrato</div></div>
+        <div class="st"><div class="n">15</div><div class="h">Onboarding</div></div>
+        <div class="st hi"><div class="n">16</div><div class="h">Avaliação contínua 30/60/90</div></div>
+        <div class="st"><div class="n">17</div><div class="h">Banco de talentos</div></div>
+        <div class="st" style="border:0;background:transparent"></div>
+      </div>
+    </div>
+    <div class="flowbar" style="margin-top:16px">
+      <div class="st"><span class="n">•</span>O ciclo não termina na contratação: a etapa 16 alimenta a 17, e a 17 alimenta a próxima vaga.</div>
+    </div>
+  </section>
+
+  <!-- ===================== 13 · FECHO ===================== -->
+  <section class="slide" id="s16">
+    <div class="grow" style="max-height:40px"></div>
+    <p class="end">Uma plataforma.<br>Três portas.<br><span class="y">Uma decisão melhor.</span></p>
+    <div class="rule" style="margin-top:22px"></div>
+    <div class="urls">
+      <div class="u"><span class="tag">A EMPRESA</span><span class="d">gestor.kavuka.ai</span></div>
+      <div class="u"><span class="tag">A VAGA</span><span class="d">kavukavagas.com.br</span></div>
+      <div class="u"><span class="tag">A PESSOA</span><span class="d">candidato.kavuka.ai</span></div>
+    </div>
+    <div class="grow"></div>
+    <p class="lead" style="font-size:26px;font-weight:800;color:#fff">É por isso que existe <span class="y">Kavuka.</span></p>
+    <button class="restart" onclick="show(0)">
+      <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 108-8"/><path d="M4 5v7h7"/></svg>VER DE NOVO</button>
+    <img class="mascot" style="right:60px;bottom:0;width:344px" src="__MASCOT__" alt="">
+  </section>
+
+  <!-- ===================== chrome ===================== -->
+  <div class="hdr hide" id="hdr">
+    <img src="__LOGO__" alt="Kavuka">
+    <div class="chapter"><span class="ln"></span><span id="chapterTx">CONTEXTO</span></div>
+  </div>
+
+  <div class="tapz l" id="tzl" onclick="go(-1)"></div>
+  <div class="tapz r" id="tzr" onclick="go(1)"></div>
+
+  <div class="nav hide" id="nav">
+    <button class="nbtn" id="prevB" onclick="go(-1)" aria-label="anterior">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div style="display:flex;align-items:center">
+      <div class="segs" id="segs"></div>
+      <div class="count" id="count">01/14</div>
+    </div>
+    <button class="nbtn pri" id="nextB" onclick="go(1)" aria-label="próximo">
+      <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+
+  <button class="menu-btn hide" id="menuB" onclick="openMenu()" aria-label="sumário">
+    <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+
+  <div class="ov" id="ov">
+    <button class="close" onclick="closeMenu()" aria-label="fechar">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2>Sumário</h2>
+    <div class="list" id="ovList"></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const TITLES = [
+  "Capa",
+  "Antes do Kavuka, a GUÉP",
+  "A aparência engana",
+  "De currículo a inteligência humana",
+  "Três portas, uma única base",
+  "Porta 1 · O gestor de RH",
+  "O gestor, por dentro",
+  "Porta 2 · Kavuka Vagas",
+  "A vitrine, por dentro",
+  "Porta 3 · O candidato",
+  "O candidato, por dentro",
+  "As avaliações: seis camadas",
+  "Doze instrumentos, um contrato",
+  "Score Humano e Fit",
+  "O que nos torna defensáveis",
+  "A jornada completa",
+  "Uma decisão melhor"
+];
+const CHAPTERS = [
+  "", "CONTEXTO", "CONTEXTO", "A VIRADA", "O UNIVERSO",
+  "PORTA 1", "PORTA 1 · NA PRÁTICA",
+  "PORTA 2", "PORTA 2 · NA PRÁTICA",
+  "PORTA 3", "PORTA 3 · NA PRÁTICA",
+  "AVALIAÇÕES", "AVALIAÇÕES", "AVALIAÇÕES", "GOVERNANÇA", "A JORNADA", "FECHO"
+];
+const N = TITLES.length;
+let cur = 0;
+
+/* ---------- escala pro tablet ---------- */
+const stage = document.getElementById('stage');
+function fit(){
+  const k = Math.min(window.innerWidth/1280, window.innerHeight/800);
+  stage.style.transform = 'scale('+k+')';
+  document.body.classList.toggle('portrait', window.innerHeight > window.innerWidth * 1.05);
+}
+window.addEventListener('resize', fit);
+window.addEventListener('orientationchange', ()=>setTimeout(fit,180));
+fit();
+
+/* ---------- navegação ---------- */
+const segsEl = document.getElementById('segs');
+for(let i=0;i<N;i++){
+  const s=document.createElement('div'); s.className='seg'; s.onclick=()=>show(i); segsEl.appendChild(s);
+}
+const ovList = document.getElementById('ovList');
+TITLES.forEach((t,i)=>{
+  if(i===0) return;
+  const b=document.createElement('button'); b.className='it';
+  b.innerHTML='<span class="n">'+String(i).padStart(2,'0')+'</span><span class="h">'+t+'</span>';
+  b.onclick=()=>{ closeMenu(); show(i); };
+  ovList.appendChild(b);
+});
+
+function show(i, back){
+  if(i<0||i>=N) return;
+  const old=document.getElementById('s'+cur);
+  old.classList.remove('on','back');
+  cur=i;
+  const el=document.getElementById('s'+cur);
+  el.classList.toggle('back', !!back);
+  el.classList.add('on');
+  const cover = cur===0;
+  document.getElementById('hdr').classList.toggle('hide', cover);
+  document.getElementById('nav').classList.toggle('hide', cover);
+  document.getElementById('menuB').classList.toggle('hide', cover);
+  document.getElementById('chapterTx').textContent = CHAPTERS[cur] || '';
+  document.getElementById('prevB').disabled = cur===0;
+  document.getElementById('nextB').disabled = cur===N-1;
+  document.getElementById('count').textContent = String(cur+1).padStart(2,'0')+'/'+String(N).padStart(2,'0');
+  [...segsEl.children].forEach((s,k)=>{
+    s.classList.toggle('on', k===cur);
+    s.classList.toggle('past', k<cur);
+  });
+  document.getElementById('tzl').style.display = cover ? 'none' : 'block';
+  document.getElementById('tzr').style.display = cover ? 'none' : 'block';
+}
+function go(d){ show(cur+d, d<0); }
+function start(){ goFullscreen(); show(1); }
+
+function door(el){
+  el.parentNode.querySelectorAll('.door').forEach(d=>d.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function openMenu(){ document.getElementById('ov').classList.add('on');
+  [...ovList.children].forEach((b,k)=>b.classList.toggle('cur', k+1===cur)); }
+function closeMenu(){ document.getElementById('ov').classList.remove('on'); }
+
+/* ---------- teclado ---------- */
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') { e.preventDefault(); go(1); }
+  if(e.key==='ArrowLeft'||e.key==='PageUp') { e.preventDefault(); go(-1); }
+  if(e.key==='Home') show(0);
+  if(e.key==='End') show(N-1);
+  if(e.key==='Escape') closeMenu();
+});
+
+/* ---------- swipe ---------- */
+let tx=0, ty=0, tt=0;
+document.addEventListener('touchstart', e=>{
+  if(e.touches.length!==1) return;
+  tx=e.touches[0].clientX; ty=e.touches[0].clientY; tt=Date.now();
+},{passive:true});
+document.addEventListener('touchend', e=>{
+  if(!e.changedTouches.length) return;
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Date.now()-tt>700) return;
+  if(Math.abs(dx)<70 || Math.abs(dx)<Math.abs(dy)*1.4) return;
+  if(cur===0) return;
+  go(dx<0 ? 1 : -1);
+},{passive:true});
+
+/* ---------- fullscreen ---------- */
+function goFullscreen(){
+  const el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  if(screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
+}
+
+/* ---------- deep link (#5 abre o slide 5) ---------- */
+function fromHash(){
+  const m = /^#(\d{1,2})$/.exec(location.hash||'');
+  return m ? Math.max(0, Math.min(N-1, parseInt(m[1],10))) : 0;
+}
+show(fromHash());
+window.addEventListener('hashchange', ()=>{ const i=fromHash(); if(i!==cur) show(i); });
+
+/* ---------- PWA offline ---------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>

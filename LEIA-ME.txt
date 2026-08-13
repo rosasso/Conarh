@@ -74,6 +74,19 @@ PARA VER / EXPORTAR OS LEADS (organizador)
     • COMPARTILHAR → manda o arquivo por WhatsApp, e-mail etc. (Android)
     • APAGAR todos os leads (pede confirmação — baixe o CSV antes!)
 
+O HUB (apresentação "O Universo Kavuka")
+----------------------------------------
+- Botão redondo "HUB" no canto SUPERIOR DIREITO, ao lado da engrenagem: abre a
+  apresentação do Universo Kavuka (pasta universo/). Lá tem um botão "CONARH"
+  no topo pra voltar pra cá.
+- Os dois têm que rodar no MESMO endereço pro hub conseguir repetir o cadastro
+  feito aqui. Dê um duplo clique em servir.command: sobe os dois em
+  http://localhost:8787/ (quiz) e http://localhost:8787/universo/ (hub).
+  Publicado no GitHub Pages já funciona igual (mesmo domínio).
+- Os leads NÃO se misturam: o quiz salva em kavuka_conarh_leads e exporta o CSV
+  daqui; o hub salva em kavuka_hub_leads e tem o CSV dele (planilha apartada).
+  O hub só LÊ os daqui pra oferecer "repetir cadastro".
+
 IMPORTANTE
 ----------
 - Os leads ficam SÓ naquele tablet/navegador. Se usar 2 tablets, exporte de cada um.

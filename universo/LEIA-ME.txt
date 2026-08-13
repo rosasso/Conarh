@@ -1,0 +1,221 @@
+O UNIVERSO KAVUKA — apresentação para tablet
+=============================================
+
+O QUE É
+-------
+Apresentação em HTML de 6 TELAS (simples e direta) que explica o universo
+Kavuka: o contexto da GUÉP, a fala do gestor (um ATS completo) e a avaliação
+comportamental, com PRINTS REAIS dos ambientes. Existe também uma versão
+longa de 17 telas em completo.html.
+
+Mesma identidade da apresentação do CONARH (navy + amarelo #F7B500, capivara
+detetive, sem emojis). Logo e mascote são os mesmos arquivos, embutidos.
+
+
+COMO USAR NO TABLET (Galaxy Tab A11+)
+-------------------------------------
+1. Copie a pasta inteira para o tablet (ou só o index.html — ele é
+   autossuficiente, ~1,0 MB, funciona offline por file://).
+2. Abra o index.html no navegador.
+3. Use o tablet NA HORIZONTAL. Em retrato aparece o aviso "gire o tablet".
+4. O primeiro toque na tela já entra em tela cheia.
+
+O desenho é 1280x800 (16:10) e escala sozinho: no tablet (1920x1200) preenche
+a tela exatamente, sem sobra e sem corte.
+
+
+
+O FORMULÁRIO (TELA 6)
+---------------------
+- Mesmos campos do quiz do CONARH: nome, e-mail, telefone, cargo, empresa,
+  quantidade de funcionários, ação, vendedor (Coelho/Afonso/Kleber/Rafa) e LGPD.
+  Obrigatórios: nome, e-mail, telefone, empresa, vendedor e o aceite da LGPD.
+  Não confere formato de e-mail nem de telefone — no estande nada pode travar.
+- ESTE CADASTRO NÃO CONCORRE À MÁQUINA DA CAPIVARA. O sorteio é só do quiz.
+- "REPETIR UM CADASTRO DO CONARH": lista quem preencheu no quiz (mais recente
+  primeiro) e repete os dados nos campos — dá pra corrigir qualquer um antes de
+  enviar. Fica registrado de onde veio (coluna Origem do CSV).
+  Só funciona se os dois estiverem no MESMO endereço: use o servir.command da
+  pasta de cima (http://localhost:8787/universo/) ou o GitHub Pages. Aberto por
+  file:// o navegador não compartilha o armazenamento e a lista vem vazia.
+- PLANILHA APARTADA: engrenagem no topo (ao lado do botão CONARH), PIN 5288 →
+  lista dos cadastros do hub, BAIXAR CSV (leads-hub-<data>.csv, separador ";")
+  e APAGAR. Os leads do quiz continuam separados, no app do CONARH.
+
+NAVEGAÇÃO
+---------
+- Toque nas laterais da tela: esquerda volta, direita avança
+- Arraste o dedo (swipe) para os lados
+- Botões redondos no rodapé: voltar / avançar
+- Barrinhas do rodapé: pula direto para uma tela
+- No computador: setas do teclado, espaço, Home, End
+- Na última tela: botão "VER DE NOVO" volta para a capa
+
+Na versão longa (completo.html) há também um SUMÁRIO no botão de três riscos
+e a tela "Três portas" é interativa.
+
+
+AS 5 TELAS (versão do estande)
+------------------------------
+1  O UNIVERSO KAVUKA        capa + contexto da GUÉP + as 3 frentes do RH
+2  GERENCIE O RH DE PONTA A PONTA  a fala do gestor + print do Kanban + a
+                            faixa da análise comportamental (Big Five + radar
+                            das 13 dimensões, em vetor). Fala de candidato E
+                            colaborador, não só de candidato.
+3  A AVALIAÇÃO COMPORTAMENTAL  as 6 camadas + gráfico das 13 dimensões
+4  KAVUKA VAGAS             a vitrine (kavukavagas.com.br) + print da lista
+5  UMA DECISÃO MELHOR       fecho com os 3 endereços
+6  DEIXE SEU CONTATO        formulário de cadastro (mesmos campos do quiz da
+                            capivara, incluindo Vendedor), com o select
+                            "REPETIR UM CADASTRO DO CONARH" e SEM sorteio.
+
+A fala da tela 2, na ordem: cadastra a vaga no seu site e no nosso portal ·
+envia a avaliação comportamental por link · gerencia todos os candidatos num
+funil só · laudo em resumo ou avaliação completa · IA que lê o currículo ·
+cada gestor com visão do processo todo.
+
+
+VERSÃO LONGA (17 telas)
+-----------------------
+Continua existindo, para reunião com mais tempo:
+
+  https://rosasso.github.io/rh/completo.html
+  fonte: src/template-completo.html  ·  saída: completo.html
+
+Ordem das telas dela:
+---------------
+00  Capa
+01  Antes do Kavuka, a GUÉP           (contexto da empresa + as 3 frentes do RH)
+02  A aparência engana                (o problema)
+03  De currículo a inteligência humana (ICH / KYID / Score Humano)
+04  Três portas, uma única base       (interativa)
+05  Porta 1 · O gestor de RH
+06  O gestor, por dentro              ** PRINTS **
+07  Porta 2 · Kavuka Vagas
+08  A vitrine, por dentro             ** PRINTS (produção) **
+09  Porta 3 · O candidato
+10  O candidato, por dentro           ** PRINTS **
+11  As avaliações: seis camadas
+12  Doze instrumentos, um contrato
+13  Score Humano e Fit
+14  O que nos torna defensáveis       (LGPD / governança)
+15  A jornada completa                (as 17 etapas)
+16  Uma decisão melhor                (fecho)
+
+
+DE ONDE VIERAM OS PRINTS
+------------------------
+- Tela 08 (vitrine): capturada direto de kavukavagas.com.br EM PRODUÇÃO.
+- Telas 06 e 10 (gestor e candidato): capturadas de uma instância LOCAL do
+  kavukaexperts rodando contra um banco de DEMONSTRAÇÃO. Isso é de propósito:
+  print de estande não pode expor nome, CPF ou avaliação de candidato real
+  (LGPD). Os dados são do candidato fictício "Caique Barros" (o seed cria como
+  "Ana Carolina Silva"; foi renomeado no banco de demonstração).
+- No print do KYID, o endereço de dev foi trocado pelo domínio real
+  (candidato.kavuka.ai) — que é o endereço de verdade da página.
+
+Os JPEGs ficam em src/shots/ e são embutidos no index.html pelo build.
+
+
+COMO EDITAR
+-----------
+NÃO edite o index.html direto (as imagens estão em base64, é pesado).
+
+  src/template.html     <- o conteúdo e o visual ficam aqui
+  src/logo.b64.txt      <- logo Kavuka embutido (data URI)
+  src/mascot_s.b64.txt  <- capivara detetive embutida (data URI)
+  src/shots/*.jpg       <- os 6 prints dos ambientes
+  src/build.py          <- gera o index.html
+  src/shoot-prints.mjs  <- recaptura os prints (ver abaixo)
+
+Depois de mexer no template:
+
+  cd /Users/sasso/kavuka-universo
+  python3 src/build.py
+
+Para ver uma tela específica no navegador do Mac, use o número dela na URL:
+index.html#11 abre a tela 11 (a contagem começa em 0, que é a capa).
+
+
+COMO REFAZER OS PRINTS
+----------------------
+O banco de demonstração local já existe (Postgres local, base "kavuka_demo").
+Para subir o ambiente e recapturar:
+
+  cd /Users/sasso/opensquad/apps/rh-experts
+  DATABASE_URL="postgresql://sasso@localhost:5432/kavuka_demo" \
+    COOKIE_SECURE=false npm run dev
+
+Login do gestor:    rodrigo.sasso@guep.com.br / kavuka2026
+Login do candidato:  caique.barros@email.com / demo2026
+
+Com o servidor no ar, em outro terminal:
+
+  cd /Users/sasso/kavuka-universo
+  node src/shoot-prints.mjs        # gera PNGs em ./env
+  # converter e reduzir (exemplo):
+  sips -Z 1120 env/g_kanban.png -s format jpeg -s formatOptions 82 \
+       --out src/shots/c_kanban.jpg
+  python3 src/build.py
+
+Se o banco de demonstração tiver sido apagado, recrie:
+
+  createdb kavuka_demo
+  cd /Users/sasso/opensquad/apps/rh-experts
+  export DATABASE_URL="postgresql://sasso@localhost:5432/kavuka_demo"
+  npx drizzle-kit push --force
+  npm run seed && npm run seed:demo && npm run seed:demo-extra && npm run seed:inbox
+  # os candidatos do seed vêm sem empresa; sem isso o gestor mostra tudo zerado:
+  psql -d kavuka_demo -c "update candidates set company_id=(select id from companies limit 1) where company_id is null;"
+
+ATENÇÃO: o .env do rh-experts aponta para o banco no Neon (dados reais).
+Sempre passe DATABASE_URL na linha de comando, como acima, para não tocar nele.
+
+O GRÁFICO (radar) DAS AVALIAÇÕES: só renderiza quando o instrumento está
+gravado como "label-adapted". O seed grava "label-guep", e aí o gráfico
+simplesmente não aparece. No banco de demonstração isso foi ajustado com:
+
+  psql -d kavuka_demo -c "update assessments set instrument='label-adapted' \
+    where instrument='label-guep';"
+
+Vale conferir qual slug o instrumento Label grava em produção — se for
+"label-guep", o gráfico não está aparecendo para ninguém.
+
+
+NO AR (GitHub Pages)
+--------------------
+  https://rosasso.github.io/rh/
+
+Repositório PÚBLICO **rosasso/rh** — contém SÓ o que serve a página
+(index.html + ícones + manifest + service worker + .nojekyll + robots.txt).
+O código-fonte (src/) e este LEIA-ME ficam DE FORA de propósito: o LEIA-ME tem
+senhas do ambiente de demonstração e não deve ir para um repositório público.
+
+A página tem `noindex` no HTML e robots.txt bloqueando tudo — o endereço
+funciona para quem tem o link, mas não aparece no Google.
+
+Como republicar depois de mexer no conteúdo:
+
+  cd /Users/sasso/kavuka-universo
+  python3 src/build.py
+  D=/Users/sasso/kavuka-universo-pages
+  cp index.html completo.html icon-192.png icon-512.png apple-touch-icon.png \
+     manifest.webmanifest service-worker.js $D/
+  cd $D && git add -A && git commit -m "atualiza apresentação" && git push
+
+Se o push der 403, troque a conta do gh antes:  gh auth switch -u rosasso
+
+Depois de publicar, o navegador pode servir a versão antiga por causa do
+service worker. Para forçar: suba o número da versão em service-worker.js
+(CACHE = 'kavuka-universo-v3') junto com a alteração.
+
+
+INSTALAR COMO APP NO TABLET
+---------------------------
+Abra https://rosasso.github.io/rh/ no Chrome do tablet e use "Adicionar à
+tela de início". Aí ele abre em tela cheia, sem barra de navegador, e
+continua funcionando offline (o service worker guarda tudo no primeiro
+acesso). É o jeito recomendado para o estande — não depende de wi-fi na hora.
+
+Por file:// o service worker não roda, mas a apresentação funciona igual,
+porque tudo está dentro do index.html.
