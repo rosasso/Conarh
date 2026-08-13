@@ -181,6 +181,13 @@ ul.bul li b{font-weight:600;letter-spacing:.25px;color:var(--yellow)}
 
 /* ---------- 4 · fecho ---------- */
 .ichcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;max-width:690px}
+.ichcards.c4{grid-template-columns:repeat(4,1fr);max-width:none;margin-top:9px;gap:9px}
+.ichfx{margin-top:auto}
+.ichfx .hd{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#cfe0ff}
+.ichcards.c4 .ic{padding:9px 12px}
+.ichcards.c4 .ic svg{width:18px;height:18px;margin-bottom:5px}
+.ichcards.c4 .ic .t{font-size:13.5px}
+.ichcards.c4 .ic .d{font-size:11.5px;line-height:1.35}
 .ic{border:1px solid var(--line);border-radius:14px;padding:11px 14px;background:linear-gradient(180deg,rgba(18,42,88,.55),rgba(10,26,58,.42))}
 .ic svg{width:20px;height:20px;fill:none;stroke:var(--yellow);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin-bottom:6px}
 .ic .t{font-size:14.5px;font-weight:800;letter-spacing:.1px}
@@ -428,14 +435,29 @@ body.portrait .rotate{display:flex}
     <p class="lead" style="font-size:18px"><span class="y">kavukavagas.com.br</span> — a vitrine que traz gente nova para o seu processo. Não substitui nada: complementa.</p>
     <div class="cols" style="margin-top:12px;gap:34px">
       <div class="col" style="flex:1.02">
-        <ul class="bul">
-          <li><b>A vaga é criada uma vez, no gestor.</b> Marcada como pública, ela aparece na vitrine sozinha — sem redigitar.</li>
-          <li><b>Vitrine com filtro.</b> Cidade, área, nível e tipo de contratação — a pessoa acha a vaga certa sem criar conta antes.</li>
-          <li><b>Página própria por vaga.</b> Endereço para compartilhar em qualquer canal e ser achado no Google.</li>
-          <li><b>Candidatura direta.</b> Dados e currículo em PDF caem na fila da sua empresa — nada se perde no e-mail.</li>
-          <li><b>Passagem sem senha.</b> Quem se candidata já entra logado no portal dele, sem criar acesso do zero.</li>
-          <li><b>Vários gestores na mesma operação.</b> Você libera acesso a quem precisa acompanhar — cada um entra com a própria conta e vê o processo todo.</li>
-        </ul>
+        <p class="lead" style="font-size:17px;margin-top:2px">A plataforma monta <b>o melhor currículo</b> — pronto pra ser analisado pelo gestor de RH, com as avaliações comportamentais no mesmo documento. <b>Tudo gratuito</b> pra pessoa.</p>
+        <div class="ichcards">
+          <div class="ic">
+            <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4M9 12h7M9 16h5"/></svg>
+            <div class="t">Currículo completo</div>
+            <div class="d">Dados, formação, experiência, habilidades e idiomas.</div>
+          </div>
+          <div class="ic">
+            <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+            <div class="t">Índice de Habilidades</div>
+            <div class="d">O que ela sabe fazer, medido — não só declarado.</div>
+          </div>
+          <div class="ic">
+            <svg viewBox="0 0 24 24"><path d="M12 4a5 5 0 015 5v1a4 4 0 01-1 8h-8a4 4 0 01-1-8V9a5 5 0 015-5z"/><path d="M9 13h6"/></svg>
+            <div class="t">Índice Comportamental</div>
+            <div class="d">Completude, consistência e qualidade das respostas.</div>
+          </div>
+          <div class="ic">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 19h2v2h-2z"/></svg>
+            <div class="t">Avaliações e KYID</div>
+            <div class="d">As avaliações aplicadas e o QR que ela leva pro próximo processo.</div>
+          </div>
+        </div>
       </div>
       <div class="col" style="flex:1">
         <div class="frame sm">
@@ -459,31 +481,10 @@ body.portrait .rotate{display:flex}
 
   <!-- ============ 5 · FECHO ============ -->
   <section class="slide" id="s4">
-    <div class="grow" style="max-height:14px"></div>
-    <p class="end" style="font-size:44px">O melhor currículo,<br><span class="y">de graça pra pessoa.</span></p>
-    <p class="lead" style="font-size:17px;max-width:660px;margin-top:12px">Pronto pra ser analisado pelo gestor de RH — com as avaliações comportamentais no mesmo documento. O <b>Currículo ICH</b>.</p>
-    <div class="ichcards">
-      <div class="ic">
-        <svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4M9 12h7M9 16h5"/></svg>
-        <div class="t">Currículo completo</div>
-        <div class="d">Dados, formação, experiência, habilidades e idiomas.</div>
-      </div>
-      <div class="ic">
-        <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
-        <div class="t">Índice de Habilidades</div>
-        <div class="d">O que ela sabe fazer, medido — não só declarado.</div>
-      </div>
-      <div class="ic">
-        <svg viewBox="0 0 24 24"><path d="M12 4a5 5 0 015 5v1a4 4 0 01-1 8h-8a4 4 0 01-1-8V9a5 5 0 015-5z"/><path d="M9 13h6"/></svg>
-        <div class="t">Índice Comportamental</div>
-        <div class="d">Completude, consistência e qualidade das respostas.</div>
-      </div>
-      <div class="ic">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 19h2v2h-2z"/></svg>
-        <div class="t">Avaliações e KYID</div>
-        <div class="d">As avaliações aplicadas e o QR que ela leva pro próximo processo.</div>
-      </div>
-    </div>
+    <div class="grow" style="max-height:30px"></div>
+    <p class="end">Uma plataforma.<br>Três portas.<br><span class="y">Uma decisão melhor.</span></p>
+    <div class="rule" style="margin-top:22px"></div>
+    <p class="lead" style="font-size:18px;max-width:600px;margin-top:18px">A empresa decide melhor, a vaga encontra quem procura e a pessoa sai com o currículo pronto — <b>de graça</b>.</p>
     <div class="grow"></div>
     <p class="lead" style="font-size:19px;font-weight:800;color:#fff;max-width:640px">Faz sentido pra você? <span class="y">Deixe suas considerações</span> pra nos ajudar — e entre pra receber as novidades da comunidade.</p>
     <div style="display:flex;align-items:center;gap:14px;margin-top:12px">
