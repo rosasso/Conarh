@@ -222,6 +222,7 @@ form{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px;margin-top:30px;
 .leadrow{padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}
 .leadrow:last-child{border-bottom:0}
 .leadrow .nm{font-weight:800}
+.leadrow .vend{color:var(--yellow);font-weight:800;margin-right:4px}
 .leadrow .meta{color:var(--mut);font-size:12.5px;margin-top:2px}
 .empty{padding:26px;text-align:center;color:var(--mut)}
 .admin-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -352,6 +353,8 @@ form{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px;margin-top:30px;
         <option value="">Selecione…</option><option>Até 50</option><option>51 a 100</option><option>101 a 200</option><option>201 a 500</option><option>Acima de 500</option></select></div>
       <div class="field"><label>Ação</label><select name="acao">
         <option value="">Selecione…</option><option>Agendar Reunião</option><option>Envio de Apresentação</option><option>Nenhuma ação</option></select></div>
+      <div class="field wide"><label>Vendedor <span class="req">*</span></label><select name="vendedor">
+        <option value="">Selecione…</option><option>Coelho</option><option>Afonso</option><option>Kleber</option><option>Rafa</option></select></div>
       <label class="consent"><input type="checkbox" name="consent"><span>Autorizo o contato da Kavuka&nbsp;by&nbsp;Guép e o tratamento dos meus dados conforme a LGPD.</span></label>
       <div class="err" id="formErr"></div>
       <div class="form-send"><button class="btn" type="submit">ENVIAR
@@ -501,7 +504,7 @@ document.getElementById('leadForm').addEventListener('submit',function(e){
   const email=get('email');
   // Exige só que o campo tenha ALGUMA COISA. NÃO confere formato de e-mail
   // nem de telefone de propósito: no estande, nada pode travar o visitante.
-  const need=['nome','email','telefone','empresa'];
+  const need=['nome','email','telefone','empresa','vendedor'];
   let bad=false;
   need.forEach(n=>{ if(!get(n)){ f.elements[n].closest('.field').classList.add('bad'); bad=true; }});
   if(bad){ err.textContent='Preencha os campos destacados.'; return; }
@@ -512,6 +515,7 @@ document.getElementById('leadForm').addEventListener('submit',function(e){
     ts:new Date().toISOString(),
     nome:get('nome'), email:email, cargo:get('cargo'), telefone:get('telefone'),
     empresa:get('empresa'), funcionarios:get('funcionarios'), acao:get('acao'),
+    vendedor:get('vendedor'),
     vaga: sel.job?sel.job.title:'', candidato: sel.cand?sel.cand.name:'', consent:'Sim'
   };
   leadsMem.push(lead); saveLeads();
@@ -546,14 +550,14 @@ function renderLeads(){
   const box=document.getElementById('leadList');
   if(!leadsMem.length){ box.innerHTML='<div class="empty">Nenhum lead ainda.</div>'; return; }
   box.innerHTML=leadsMem.slice().reverse().map(l=>
-    `<div class="leadrow"><div class="nm">${esc(l.nome)} · ${esc(l.empresa)}</div>
+    `<div class="leadrow"><div class="nm"><span class="vend">${esc(l.vendedor||'—')}</span> ${esc(l.nome)} · ${esc(l.empresa)}</div>
      <div class="meta">${esc(l.email)} · ${esc(l.telefone)} · ${esc(l.vaga||'-')} → ${esc(l.candidato||'-')}${l.acao?' · '+esc(l.acao):''} · ${fmtDate(l.ts)}</div></div>`
   ).join('');
 }
 function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
 /* ---------- CSV ---------- */
-const CSV_COLS=[["ts","Data/Hora"],["nome","Nome"],["email","E-mail"],["cargo","Cargo"],
+const CSV_COLS=[["ts","Data/Hora"],["vendedor","Vendedor"],["nome","Nome"],["email","E-mail"],["cargo","Cargo"],
   ["telefone","Telefone"],["empresa","Empresa"],["funcionarios","Qtd. Funcionários"],
   ["acao","Ação"],["vaga","Vaga escolhida"],["candidato","Candidato escolhido"],["consent","Aceite LGPD"]];
 function csvCell(v){ v=(v==null?'':String(v)); return '"'+v.replace(/"/g,'""')+'"'; }
