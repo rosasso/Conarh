@@ -251,6 +251,11 @@ body.portrait .rotate{display:flex}
 .fbtn{border:0;border-radius:60px;padding:11px 28px;background:linear-gradient(180deg,var(--yellow),var(--yellow-d));
   color:var(--ink);font-family:var(--font);font-weight:800;font-size:15px;letter-spacing:.3px;cursor:pointer}
 .fbtn:active{transform:scale(.97)}
+.lbtn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgba(255,255,255,.06);
+  color:#cfe0ff;border-radius:60px;padding:10px 20px;font-family:var(--font);font-weight:800;font-size:12.5px;
+  letter-spacing:.6px;cursor:pointer}
+.lbtn:active{background:rgba(255,255,255,.13)}
+.lbtn svg{width:15px;height:15px;fill:none;stroke:var(--yellow);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ferr{font-size:12.5px;font-weight:700;color:#ff9c9c}
 .fok{display:none;flex-direction:column;align-items:flex-start;gap:12px;margin-top:26px}
 .fok.on{display:flex}
@@ -521,7 +526,10 @@ body.portrait .rotate{display:flex}
           <textarea id="fbTxt" name="feedback" rows="2" placeholder="Escreva aqui — ou toque em FALAR e dite"></textarea>
         </div>
         <label class="cons"><input type="checkbox" name="consent"><span>Autorizo o contato da Kavuka&nbsp;by&nbsp;Guép e o tratamento dos meus dados conforme a LGPD.</span></label>
-        <div class="frow"><button class="fbtn" type="submit">ENVIAR</button><span class="ferr" id="fErr"></span></div>
+        <div class="frow"><button class="fbtn" type="submit">ENVIAR</button>
+          <button class="lbtn" type="button" id="limparBtn">
+            <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg>LIMPAR</button>
+          <span class="ferr" id="fErr"></span></div>
       </form>
       <div class="fok" id="fOk">
         <div class="big">Obrigado<span id="okName"></span>.</div>
@@ -789,6 +797,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     window.addEventListener('hashchange', parar);
   })();
 
+  document.getElementById('limparBtn').addEventListener('click',()=>{
+    const f=document.getElementById('hubForm');
+    f.reset(); delete f.dataset.origem;
+    f.querySelectorAll('.fd').forEach(x=>x.classList.remove('bad'));
+    document.getElementById('fErr').textContent='';
+    const sel=document.getElementById('pfSel'); if(sel) sel.value='';
+    const c=document.getElementById('fbTxt'); if(c) c.value='';
+    f.elements['nome'].focus();
+    toastH('Formulário limpo.');
+  });
   document.getElementById('gearH').onclick=abrirAdmH;
   document.getElementById('pinHIn').addEventListener('keydown',e=>{ if(e.key==='Enter') tryPinH(); });
 });
