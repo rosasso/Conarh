@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><body style="font:15px monospace;background:#111;color:#0f0;padding:18px">
+<div id="o">…</div><script>
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const l=[];
+l.push('SpeechRecognition: '+(SR?'sim':'NÃO'));
+l.push('isSecureContext: '+window.isSecureContext);
+l.push('availableOnDevice (API existe?): '+(SR&&typeof SR.availableOnDevice==='function'?'sim':'NÃO'));
+l.push('installOnDevice: '+(SR&&typeof SR.installOnDevice==='function'?'sim':'NÃO'));
+l.push('processLocally (prop no proto): '+(SR&&('processLocally' in SR.prototype)?'sim':'NÃO'));
+l.push('navigator.onLine: '+navigator.onLine);
+l.push('UA: '+navigator.userAgent.slice(0,90));
+document.getElementById('o').innerHTML=l.join('<br>');
+if(SR&&SR.availableOnDevice){ SR.availableOnDevice('pt-BR').then(r=>{ document.getElementById('o').innerHTML+='<br>availableOnDevice("pt-BR") = '+r; }); }
+</script></body>
