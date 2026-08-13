@@ -38,6 +38,13 @@ O FORMULÁRIO (TELA 6)
   Só funciona se os dois estiverem no MESMO endereço: use o servir.command da
   pasta de cima (http://localhost:8787/universo/) ou o GitHub Pages. Aberto por
   file:// o navegador não compartilha o armazenamento e a lista vem vazia.
+- OBSERVAÇÃO / INSIGHT: campo livre (opcional) com botão FALAR ao lado — o
+  navegador transcreve a fala e joga no campo; dá pra corrigir digitando antes
+  de enviar. Vai pra coluna Feedback do CSV. O ditado precisa de HTTPS (o
+  endereço do Pages serve; aberto por file:// o botão nem aparece) E de
+  internet, porque quem transcreve é o serviço do navegador. Sem rede, o app
+  avisa e a pessoa escreve normalmente. Funciona no Chrome e no Safari; no
+  Firefox o botão não aparece.
 - PLANILHA APARTADA: engrenagem no topo (ao lado do botão CONARH), PIN 5288 →
   lista dos cadastros do hub, BAIXAR CSV (leads-hub-<data>.csv, separador ";")
   e APAGAR. Os leads do quiz continuam separados, no app do CONARH.

@@ -229,6 +229,19 @@ body.portrait .rotate{display:flex}
 #hubForm select,.pf select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239fb0d0' stroke-width='2.4' stroke-linecap='round'><path d='M6 9l6 6 6-6'/></svg>");
   background-repeat:no-repeat;background-position:right 11px center;background-size:16px}
 #hubForm input:focus,#hubForm select:focus,.pf select:focus{outline:0;border-color:var(--yellow)}
+#hubForm textarea{width:100%;min-height:54px;max-height:54px;background:rgba(255,255,255,.05);color:#fff;
+  border:1px solid var(--line);border-radius:11px;padding:8px 12px;font-family:var(--font);font-size:14.5px;
+  font-weight:500;line-height:1.4;resize:none;-webkit-user-select:text;user-select:text}
+#hubForm textarea:focus{outline:0;border-color:var(--yellow)}
+#hubForm .lbrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#hubForm .opt{color:var(--mut);font-weight:450;letter-spacing:0;text-transform:none}
+.mic{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.06);
+  color:#cfe0ff;border-radius:30px;padding:4px 11px;font-family:var(--font);font-weight:800;font-size:10.5px;
+  letter-spacing:1.1px;cursor:pointer}
+.mic svg{width:13px;height:13px;fill:none;stroke:var(--yellow);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.mic.on{border-color:#ff6b6b;color:#ff9c9c;background:rgba(255,107,107,.12);animation:micp 1.1s ease-in-out infinite}
+.mic.on svg{stroke:#ff6b6b}
+@keyframes micp{0%,100%{opacity:1}50%{opacity:.55}}
 #hubForm .fd.bad input,#hubForm .fd.bad select{border-color:#ff6b6b}
 #hubForm option{background:#0c1c3d;color:#fff}
 #hubForm label.cons{grid-column:1 / -1;display:flex;align-items:flex-start;gap:9px;font-size:12.5px;
@@ -480,7 +493,15 @@ body.portrait .rotate{display:flex}
           <option value="">Selecione…</option><option>Agendar Reunião</option><option>Envio de Apresentação</option><option>Nenhuma ação</option></select></div>
         <div class="fd"><label>Vendedor <span class="rq">*</span></label><select name="vendedor">
           <option value="">Selecione…</option><option>Coelho</option><option>Afonso</option><option>Kleber</option><option>Rafa</option></select></div>
-        <div class="fd w"><label>Feedback <span style="color:var(--mut);font-weight:450;letter-spacing:0">— o que achou, o que faltou</span></label><input name="feedback" type="text" placeholder="Pode escrever à vontade"></div>
+        <div class="fd w">
+          <div class="lbrow">
+            <label for="fbTxt">Observação / insight <span class="opt">— o que achou, o que faltou</span></label>
+            <button type="button" class="mic" id="micBtn" hidden aria-label="Ditar por voz">
+              <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+              <span id="micTx">FALAR</span></button>
+          </div>
+          <textarea id="fbTxt" name="feedback" rows="2" placeholder="Escreva aqui — ou toque em FALAR e dite"></textarea>
+        </div>
         <label class="cons"><input type="checkbox" name="consent"><span>Autorizo o contato da Kavuka&nbsp;by&nbsp;Guép e o tratamento dos meus dados conforme a LGPD.</span></label>
         <div class="frow"><button class="fbtn" type="submit">ENVIAR</button><span class="ferr" id="fErr"></span></div>
       </form>
@@ -686,6 +707,50 @@ document.addEventListener('DOMContentLoaded',()=>{
     f.style.display='none'; document.querySelector('.pf').style.display='none';
     document.getElementById('fOk').classList.add('on');
   });
+
+
+  /* ---------- ditado por voz no campo de observação ----------
+     Web Speech API (pt-BR). Precisa de HTTPS (ou localhost) e de internet —
+     o navegador manda o áudio pro serviço de reconhecimento. Sem suporte ou
+     sem permissão, o botão some/avisa e a pessoa escreve normalmente.       */
+  (function(){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const btn = document.getElementById('micBtn'), campo = document.getElementById('fbTxt');
+    if(!btn || !campo) return;
+    if(!SR || !window.isSecureContext){ btn.remove(); return; }
+    btn.hidden = false;
+    const rot = document.getElementById('micTx');
+    let rec = null, ligado = false, base = '';
+    function parar(){ ligado=false; btn.classList.remove('on'); rot.textContent='FALAR'; try{ rec && rec.stop(); }catch(e){} }
+    btn.addEventListener('click', () => {
+      if(ligado){ parar(); return; }
+      rec = new SR();
+      rec.lang='pt-BR'; rec.continuous=true; rec.interimResults=true;
+      base = campo.value.trim();
+      rec.onstart = () => { ligado=true; btn.classList.add('on'); rot.textContent='OUVINDO'; toastH('Pode falar — toque de novo pra parar.'); };
+      rec.onresult = (ev) => {
+        let fechado='', aberto='';
+        for(let i=ev.resultIndex;i<ev.results.length;i++){
+          const t=ev.results[i][0].transcript;
+          if(ev.results[i].isFinal) fechado+=t; else aberto+=t;
+        }
+        if(fechado){ base = (base?base+' ':'')+fechado.trim(); }
+        campo.value = (base?base+' ':'') + aberto.trim();
+        campo.scrollTop = campo.scrollHeight;
+      };
+      rec.onerror = (ev) => {
+        parar();
+        if(ev.error==='not-allowed'||ev.error==='service-not-allowed') toastH('Microfone bloqueado — libere o acesso no navegador.');
+        else if(ev.error==='no-speech') toastH('Não ouvi nada. Toque em FALAR e tente de novo.');
+        else if(ev.error==='network') toastH('Sem internet: o ditado precisa de rede. Dá pra escrever normalmente.');
+      };
+      rec.onend = () => { if(ligado) parar(); };
+      try{ rec.start(); }catch(e){ parar(); toastH('Não consegui abrir o microfone.'); }
+    });
+    // ao enviar ou trocar de tela, para de ouvir
+    document.getElementById('hubForm').addEventListener('submit', parar);
+    window.addEventListener('hashchange', parar);
+  })();
 
   document.getElementById('gearH').onclick=abrirAdmH;
   document.getElementById('pinHIn').addEventListener('keydown',e=>{ if(e.key==='Enter') tryPinH(); });
