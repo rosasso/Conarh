@@ -500,6 +500,7 @@ body.portrait .rotate{display:flex}
   <section class="slide" id="s5">
     <h1 class="t">DEIXE SEU <span class="y">CONTATO</span></h1>
     <p class="lead" style="font-size:17px">Já preencheu no quiz da capivara? Escolha seu nome abaixo que eu repito os dados — e você corrige o que quiser.</p>
+    <div id="storageWarnH" style="display:none;margin-top:8px;color:#ff9c9c;font-weight:800;font-size:13.5px">ATENÇÃO: este aparelho NÃO está conseguindo salvar cadastros — chame o organizador antes de usar</div>
     <div class="fwrap">
       <div class="pf">
         <label>REPETIR UM CADASTRO DO CONARH</label>
@@ -677,7 +678,27 @@ const CONARH_KEY='kavuka_conarh_leads', HUB_KEY='kavuka_hub_leads', PIN_H='5288'
 let hubLeads=[];
 function escH(v){ return String(v==null?'':v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function loadHub(){ try{const r=localStorage.getItem(HUB_KEY); hubLeads=r?JSON.parse(r):[];}catch(e){hubLeads=[];} return hubLeads; }
-function saveHub(){ try{localStorage.setItem(HUB_KEY,JSON.stringify(hubLeads));}catch(e){} }
+// Grava e CONFERE lendo de volta — setItem pode falhar em silêncio (modo
+// privado, quota, storage desabilitado). Sem essa conferência o app mostrava
+// sucesso e limpava o formulário mesmo quando nada foi salvo de verdade.
+function saveHub(){
+  try{
+    localStorage.setItem(HUB_KEY,JSON.stringify(hubLeads));
+    const back=localStorage.getItem(HUB_KEY);
+    return !!back && JSON.parse(back).length===hubLeads.length;
+  }catch(e){ return false; }
+}
+let storageOkH=true;
+function checkStorageH(){
+  try{
+    const t='__kavuka_test__'; localStorage.setItem(t,'1');
+    storageOkH = localStorage.getItem(t)==='1';
+    localStorage.removeItem(t);
+  }catch(e){ storageOkH=false; }
+  const w=document.getElementById('storageWarnH');
+  if(w) w.style.display = storageOkH ? 'none' : 'block';
+  return storageOkH;
+}
 function conarhLeads(){ try{const r=localStorage.getItem(CONARH_KEY); const a=r?JSON.parse(r):[]; return Array.isArray(a)?a:[];}catch(e){return [];} }
 function toastH(msg){
   let t=document.getElementById('tstH');
@@ -714,7 +735,7 @@ function novoCadastro(){
   popPrefill();
 }
 document.addEventListener('DOMContentLoaded',()=>{
-  loadHub(); popPrefill();
+  loadHub(); popPrefill(); checkStorageH();
   const sel=document.getElementById('pfSel');
   if(sel) sel.addEventListener('change',()=>{ if(sel.value!=='') preencherDo(pfCache[Number(sel.value)]); });
 
@@ -735,7 +756,11 @@ document.addEventListener('DOMContentLoaded',()=>{
       nome:get('nome'), email:get('email'), cargo:get('cargo'), telefone:get('telefone'), empresa:get('empresa'),
       funcionarios:get('funcionarios'), acao:get('acao'), vendedor:get('vendedor'), feedback:get('feedback'),
       origem: f.dataset.origem?('conarh:'+f.dataset.origem):'hub', consent:'Sim' });
-    saveHub();
+    if(!saveHub()){
+      hubLeads.pop();
+      err.textContent='Não deu para salvar. Toque em ENVIAR de novo — se continuar falhando, chame o organizador (aparelho sem armazenamento).';
+      return;
+    }
     const pn=get('nome').split(' ')[0];
     document.getElementById('okName').textContent = pn?(', '+pn):'';
     f.style.display='none'; document.querySelector('.pf').style.display='none';

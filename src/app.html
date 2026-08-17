@@ -107,6 +107,8 @@ body{
 .mag-rule svg{width:66px;height:66px;flex:none}
 .sub{text-align:center;font-size:50px;font-weight:700;line-height:1.28;margin:0}
 .sub .y{color:var(--yellow)}
+#storageWarn{display:none;position:absolute;left:0;bottom:14px;width:100%;text-align:center;
+  color:#ff9c9c;font-weight:800;font-size:20px;letter-spacing:.3px}
 .feats{position:absolute;right:34px;bottom:320px;width:600px;z-index:2;
   display:flex;flex-direction:column;gap:76px;align-items:center}
 .feat{display:flex;flex-direction:column;align-items:center;gap:16px;
@@ -294,6 +296,7 @@ form{display:grid;grid-template-columns:1fr 1fr;gap:22px 26px;margin-top:30px;
     </div>
     <div class="cta-right"><button class="btn" onclick="startApp()">PESQUISAR
       <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="#12213f" stroke-width="2.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.7-4.7"/></svg></button></div>
+    <div id="storageWarn">ATENÇÃO: este aparelho NÃO está conseguindo salvar cadastros — chame o organizador antes de usar</div>
   </section>
 
   <!-- =================== TELA 2 — ESCOLHA A VAGA =================== -->
@@ -456,8 +459,26 @@ function loadLeads(){
   catch(e){ /* file:// sem storage — usa memória */ }
   return leadsMem;
 }
+// Grava e CONFERE lendo de volta — setItem pode falhar em silêncio (modo
+// privado, quota, storage desabilitado). Sem essa conferência o app mostrava
+// "Obrigado" e limpava o formulário mesmo quando nada foi salvo de verdade.
 function saveLeads(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(leadsMem)); }catch(e){}
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify(leadsMem));
+    const back = localStorage.getItem(STORE_KEY);
+    return !!back && JSON.parse(back).length === leadsMem.length;
+  }catch(e){ return false; }
+}
+let storageOk = true;
+function checkStorage(){
+  try{
+    const t='__kavuka_test__'; localStorage.setItem(t,'1');
+    storageOk = localStorage.getItem(t)==='1';
+    localStorage.removeItem(t);
+  }catch(e){ storageOk = false; }
+  const w=document.getElementById('storageWarn');
+  if(w) w.style.display = storageOk ? 'none' : 'block';
+  return storageOk;
 }
 
 /* ---------- navegação ---------- */
@@ -533,7 +554,12 @@ document.getElementById('leadForm').addEventListener('submit',function(e){
     vendedor:get('vendedor'),
     vaga: sel.job?sel.job.title:'', candidato: sel.cand?sel.cand.name:'', consent:'Sim'
   };
-  leadsMem.push(lead); saveLeads();
+  leadsMem.push(lead);
+  if(!saveLeads()){
+    leadsMem.pop();
+    err.textContent='Não deu para salvar. Toque em ENVIAR de novo — se continuar falhando, chame o organizador (aparelho sem armazenamento).';
+    return;
+  }
   const first=lead.nome.split(' ')[0];
   document.getElementById('thkName').textContent=first?(', '+first):'';
   f.reset();
@@ -631,6 +657,7 @@ function resetIdle(){ clearTimeout(idleT); idleT=setTimeout(()=>{
 
 /* ---------- início ---------- */
 loadLeads();
+checkStorage();
 show('s-start');
 
 /* ---------- PWA offline ---------- */
